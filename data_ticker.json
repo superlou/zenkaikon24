@@ -1,0 +1,6 @@
+{
+    "speed": 1,
+    "font": "font_Lato-Light.ttf",
+    "active": true,
+    "messages": ["Message 1", "Message 2"]
+}
