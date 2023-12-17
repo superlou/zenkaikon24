@@ -6,6 +6,8 @@ local offset = require "offset"
 local font = resource.load_font "font_Lato-Regular.ttf"
 local right_bg = resource.load_image "img_right_bg.png"
 local right_bg_fold = resource.load_image "img_right_bg_fold.png"
+local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
+local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 
 local ticker = Ticker:new("config.json", 0, HEIGHT - 116, WIDTH, 116)
 
@@ -22,4 +24,6 @@ function node.render()
     ticker:draw()
 
     right_bg_fold:draw(885, 1048, 885 + 1035, 1048 + 32)
+    ticker_left_crop:draw(0, 964, 47, 964 + 116)
+    ticker_right_crop:draw(1692, 964, 1692 + 228, 964 + 116)
 end
