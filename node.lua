@@ -6,7 +6,7 @@ local offset = require "offset"
 local font = resource.load_font "font_Lato-Regular.ttf"
 local right_bg = resource.load_image "img_right_bg.png"
 
-local ticker = Ticker:new("data_ticker.json", 0, 800, WIDTH, 100)
+local ticker = Ticker:new("config.json", 0, HEIGHT - 116, WIDTH, 116)
 
 function node.render()
     gl.clear(1, 1, 1, 1)

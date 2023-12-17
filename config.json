@@ -1,0 +1,29 @@
+{
+    "_note": "This config.json is not used. It is only for local development."
+    "__metadata":{
+        "api":"https://info-beamer.com/api/v1/device/34211/on-device/19715-af3e7739943295ec270a95747cbdb7ea",
+        "config_hash":"72de2df326a3d698",
+        "config_rev":3,
+        "device_data":{},
+        "device_id":34211,
+        "instance_id":254807,
+        "instance_path":"",
+        "node_idx":0,
+        "node_path":"",
+        "package_id":39745,
+        "scratch":"52bb206f6c612738",
+        "secrets": {
+            "account":"redacted",
+            "setup":"redacted"
+        },
+        "setup_id":245722,
+        "sync_ts":1702845900,
+        "timezone":"UTC"
+    },
+    "ticker_msgs":[
+        {"ticker_text_msg":"First ticker message"},
+        {"ticker_text_msg":"Second ticker message"},
+        {"ticker_text_msg":"Last ticker message"}
+    ],
+    "ticker_speed": 2.0
+}

@@ -13,6 +13,11 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "title": "Ticker Speed",
+            "name": "ticker_speed",
+            "type": "float"
         }
     ]
 }
