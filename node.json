@@ -1,4 +1,18 @@
 {
     "name": "Main Node",
-    "options": []
+    "options": [
+        {
+            "title": "Ticker Messages",
+            "name": "ticker_msgs",
+            "type": "list",
+            "itemname": "Ticker Message",
+            "items": [
+                {
+                    "title": "Ticker Text Message",
+                    "name": "ticker_text_msg",
+                    "type": "string"
+                }
+            ]
+        }
+    ]
 }
