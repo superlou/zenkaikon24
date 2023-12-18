@@ -1,5 +1,5 @@
 {
-    "_note": "This config.json is not used. It is only for local development."
+    "_note": "This config.json is not used. It is only for local development.",
     "__metadata":{
         "api":"https://info-beamer.com/api/v1/device/34211/on-device/19715-af3e7739943295ec270a95747cbdb7ea",
         "config_hash":"72de2df326a3d698",

@@ -1,0 +1,24 @@
+#!/usr/bin/python2.7
+import time
+from datetime import datetime
+import socket
+from py_hosted import config, node
+
+config.restart_on_update()
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+IP_PORT = ("127.0.0.1", 4444)
+
+while True:
+    time.sleep(1)
+    now = datetime.now()
+    time_hhmm = now.strftime("%I:%M")
+    time_am_pm = now.strftime("%p")
+
+    # Used for compatiblity since "%-I" doesn't work on all systems
+    if time_hhmm[0] == "0":
+        time_hhmm = time_hhmm[1:]
+
+    node.send_json("clock/update", {
+        "hh_mm": time_hhmm,
+        "am_pm": time_am_pm,
+    })
