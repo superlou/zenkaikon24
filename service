@@ -18,7 +18,7 @@ while True:
     if time_hhmm[0] == "0":
         time_hhmm = time_hhmm[1:]
 
-    node.send_json("clock/update", {
+    node.send_json("/clock/update", {
         "hh_mm": time_hhmm,
         "am_pm": time_am_pm,
     })

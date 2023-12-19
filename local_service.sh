@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-NODE=zenkaikon24/ ./service
+NODE=zenkaikon24 ./service
