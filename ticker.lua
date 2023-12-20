@@ -1,4 +1,3 @@
-require "json_util"
 require "color_util"
 local class = require "middleclass"
 
@@ -12,23 +11,27 @@ local msg_y_offset = 28
 function Ticker:initialize()
 end
 
-function Ticker:initialize(data_filename, x, y, w, h)
+function Ticker:initialize(x, y, w, h)
     self.x, self.y = x, y
     self.w, self.h = w, h
     self.bg = create_color_resource_hex("241f31")
+    self.speed = 1
+    self.msgs = {}
     self.ticker_msgs = {}
     self.next_msg_id = 1
     self.font = font
-
     self.viewing_area_end = self.x + self.w
+end
 
-    json_watch(data_filename, function(data)
-        self.speed = data.ticker_speed
-        self.msgs = {}
-        for i, item in ipairs(data.ticker_msgs) do
-            self.msgs[i] = item.ticker_text_msg
-        end
-    end)
+function Ticker:set_speed(speed)
+    self.speed = speed
+end
+
+function Ticker:set_msgs_from_config(config)
+    self.msgs = {}
+    for i, item in ipairs(config.ticker_msgs) do
+        self.msgs[i] = item.ticker_text_msg
+    end
 end
 
 function Ticker:draw()

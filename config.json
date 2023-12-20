@@ -25,5 +25,18 @@
         {"ticker_text_msg":"Second ticker message"},
         {"ticker_text_msg":"Last ticker message"}
     ],
-    "ticker_speed": 2.0
+    "ticker_speed": 2.0,
+    "left_topic_player":[{
+        "device":"",
+        "duration":5,
+        "heading":"Announcement!",
+        "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
+        "message":""
+    }, {
+        "device":"",
+        "duration":5,
+        "heading":"Something Else?",
+        "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
+        "message":""
+    }]
 }

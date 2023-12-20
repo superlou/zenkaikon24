@@ -1,6 +1,7 @@
 gl.setup(1920, 1080)
 require "heading"
 require "color_util"
+require "json_util"
 local Ticker = require "ticker"
 local Clock = require "clock"
 local offset = require "offset"
@@ -13,7 +14,7 @@ local right_bg_fold = resource.load_image "img_right_bg_fold.png"
 local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
 local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 
-local ticker = Ticker:new("config.json", 0, HEIGHT - 116, WIDTH, 116)
+local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
 local clock = Clock:new(1710, 972, 200, 96)
 
 local topic_left = TopicPlayer(800, 750)
@@ -24,6 +25,12 @@ util.data_mapper {
         clock:update(data.hh_mm, data.am_pm)
     end;
 }
+
+json_watch("config.json", function(config)
+    ticker:set_speed(config.ticker_speed)
+    ticker:set_msgs_from_config(config)
+    topic_left:set_topics_from_config(config["left_topic_player"])
+end)
 
 function node.render()
     gl.clear(1, 1, 1, 1)
