@@ -34,7 +34,8 @@
                 "title": "Media",
                 "name": "media",
                 "type": "resource",
-                "valid": ["image", "video"]
+                "valid": ["image", "video"],
+                "default": "img_no_media.png"
             }, {
                 "title": "Duration",
                 "name": "duration",
