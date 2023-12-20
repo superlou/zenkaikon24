@@ -6,18 +6,44 @@
             "name": "ticker_msgs",
             "type": "list",
             "itemname": "Ticker Message",
-            "items": [
-                {
-                    "title": "Ticker Text Message",
-                    "name": "ticker_text_msg",
-                    "type": "string"
-                }
-            ]
+            "items": [{
+                "title": "Ticker Text Message",
+                "name": "ticker_text_msg",
+                "type": "string"
+            }]
         },
         {
             "title": "Ticker Speed",
             "name": "ticker_speed",
             "type": "float"
+        },
+        {
+            "title": "Left Topic Player",
+            "name": "left_topic_player",
+            "type": "list",
+            "itemname": "Topic",
+            "items": [{
+                "title": "Heading",
+                "name": "heading",
+                "type": "string"
+            }, {
+                "title": "Message",
+                "name": "message",
+                "type": "text"
+            }, {
+                "title": "Media",
+                "name": "media",
+                "type": "resource",
+                "valid": ["image", "video"]
+            }, {
+                "title": "Duration",
+                "name": "duration",
+                "type": "duration"
+            }, {
+                "title": "Device",
+                "name": "device",
+                "type": "device"
+            }]
         }
     ]
 }
