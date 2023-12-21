@@ -7,6 +7,7 @@ local Clock = require "clock"
 local offset = require "offset"
 local json = require "json"
 local TopicPlayer = require "topic_player"
+local Tween, tweener = unpack(require "tween")
 
 local font = resource.load_font "font_Lato-Regular.ttf"
 local right_bg = resource.load_image "img_right_bg.png"
@@ -17,7 +18,14 @@ local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
 local clock = Clock:new(1710, 972, 200, 96)
 
-local topic_left = TopicPlayer(800, 750)
+local left_style = {
+    text = {
+        font = font,
+        color = {hex2rgb("333195")}
+    }
+}
+
+local topic_left = TopicPlayer(800, 750, left_style)
 
 util.data_mapper {
     ["clock/update"] = function(data)
@@ -33,6 +41,8 @@ json_watch("config.json", function(config)
 end)
 
 function node.render()
+    tweener:update(1 / 60)
+
     gl.clear(1, 1, 1, 1)
     right_bg:draw(903, 0, 903 + 1017, 1080)
 

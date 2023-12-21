@@ -31,12 +31,12 @@
         "duration":5,
         "heading":"Announcement!",
         "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
-        "message":""
+        "message":"This is some very long text that should be long enough to wrap.\n \nIt also has multiple lines!"
     }, {
         "device":"",
         "duration":5,
         "heading":"Something Else?",
         "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
-        "message":""
+        "message":"The second message"
     }]
 }
