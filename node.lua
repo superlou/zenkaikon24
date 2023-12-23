@@ -1,5 +1,5 @@
 gl.setup(1920, 1080)
-require "heading"
+local Heading = require "heading"
 require "color_util"
 require "json_util"
 local Ticker = require "ticker"
@@ -23,12 +23,13 @@ local left_style = {
         style = "underline",
         font = font,
         font_size = 64,
-        text_color = {hex2rgb("333195")},
+        text_color = "333195",
+        shadow_color = "333195",
         padding = 50,
     },
     text = {
         font = font,
-        color = {hex2rgb("333195")}
+        color = "333195",
     },
     margin = 100,
     message_y = 180,
@@ -50,6 +51,16 @@ json_watch("config.json", function(config)
     topic_left:set_topics_from_config(config["left_topic_player"])
 end)
 
+local hdg = Heading("Happening Now", {
+    style = "box",
+    font = font,
+    text_color = "ffffff",
+    font_size = 64,
+    padding = 50,
+    bg_color = "e91e63",
+    shadow_color = "bb114b",
+})
+
 function node.render()
     tw:update(1 / 60)
 
@@ -60,8 +71,9 @@ function node.render()
         topic_left:draw()
     end)
 
-    offset(1030, 0, function()
-        draw_heading_dark(font, 430, 100, "HAPPENING NOW")
+    offset(1460, 100, function()
+        hdg:draw()
+        -- draw_heading_dark(font, 430, 100, "HAPPENING NOW")
     end)
 
     ticker:draw()

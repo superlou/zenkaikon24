@@ -1,3 +1,4 @@
+require "color_util"
 local class = require "middleclass"
 local Topic = require "topic"
 local InfoTopic = class("InfoTopic", Topic)
@@ -10,6 +11,7 @@ function InfoTopic:initialize(w, h, style, duration, heading, text)
     Topic.initialize(self, w, h, style, duration)
     self.heading = heading
     self.text = text
+    self.text_color = {hex2rgb(self.style.text.color)}
     self.font_size = 40
 
     self.style = style
@@ -33,7 +35,11 @@ function InfoTopic:initialize(w, h, style, duration, heading, text)
 end
 
 function InfoTopic:draw()
-    local r, g, b = self.style.text.color[1], self.style.text.color[2], self.style.text.color[3]
+    local r, g, b = unpack(self.text_color)
+
+    offset(self.w / 2, self.style.heading_y, function()
+        self.heading:draw()
+    end)
 
     for i, line in ipairs(self.lines) do
         self.style.text.font:write(
@@ -42,10 +48,6 @@ function InfoTopic:draw()
             r, g, b, self.alpha
         )
     end
-
-    offset(self.w / 2, self.style.heading_y, function()
-        self.heading:draw()
-    end)
 end
 
 return InfoTopic
