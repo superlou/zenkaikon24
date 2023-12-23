@@ -32,24 +32,39 @@ function BoxHeading:initialize(text, heading_style)
     self.bg_resource = create_color_resource_hex(heading_style.bg_color)
     self.shadow_resource = create_color_resource_hex(heading_style.shadow_color)
     self.padding = heading_style.padding or 0
+
+    local font_w = self.font:width(self.text, self.font_size)
+    self.box_x_left = -(font_w / 2 + self.padding)
+    self.box_x_right = (font_w / 2 + self.padding)
+
+    self.y_offset_animation = 0
+    self.text_alpha = 1
+    tw:tween(self, "y_offset_animation", 8, 0, 0.5)
 end
 
 function BoxHeading:draw()
     local text_r, text_g, text_b = unpack(self.text_color)
     local font_w = self.font:width(self.text, self.font_size)
 
-    self.bg_resource:draw(
-        -(font_w / 2 + self.padding), -24,
-        font_w / 2 + self.padding, self.font_size + 16
-    )
     self.shadow_resource:draw(
-        -(font_w / 2 + self.padding), self.font_size + 16,
-        font_w / 2 + self.padding, self.font_size + 16 + 8
+        self.box_x_left, self.font_size + 16,
+        self.box_x_right, self.font_size + 16 + 8
     )
-    write_centered(self.font, 0, 0, self.text, self.font_size, text_r, text_g, text_b, 1)
+
+    self.bg_resource:draw(
+        self.box_x_left, -24 + self.y_offset_animation,
+        self.box_x_right, self.font_size + 16 + self.y_offset_animation
+    )
+
+    write_centered(
+        self.font, 0, self.y_offset_animation, self.text, self.font_size,
+        text_r, text_g, text_b, self.text_alpha
+    )
 end
 
 function BoxHeading:start_exit()
+    tw:tween(self, "text_alpha", 1, 0, 0.2)
+    tw:tween(self, "box_x_left", self.box_x_left, self.box_x_right, 0.5)
 end
 
 -- Heading that is underlined text

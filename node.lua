@@ -61,6 +61,10 @@ local hdg = Heading("Happening Now", {
     shadow_color = "bb114b",
 })
 
+tw:timer(5):on_done(function()
+    hdg:start_exit()
+end)
+
 function node.render()
     tw:update(1 / 60)
 
@@ -73,7 +77,6 @@ function node.render()
 
     offset(1460, 100, function()
         hdg:draw()
-        -- draw_heading_dark(font, 430, 100, "HAPPENING NOW")
     end)
 
     ticker:draw()
