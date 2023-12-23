@@ -19,13 +19,23 @@ local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
 local clock = Clock:new(1710, 972, 200, 96)
 
 local left_style = {
+    heading = {
+        style = "underline",
+        font = font,
+        font_size = 64,
+        text_color = {hex2rgb("333195")},
+        padding = 50,
+    },
     text = {
         font = font,
         color = {hex2rgb("333195")}
-    }
+    },
+    margin = 100,
+    message_y = 180,
+    heading_y = 100,
 }
 
-local topic_left = TopicPlayer(800, 750, left_style)
+local topic_left = TopicPlayer(1050, 970, left_style)
 
 util.data_mapper {
     ["clock/update"] = function(data)
@@ -46,11 +56,9 @@ function node.render()
     gl.clear(1, 1, 1, 1)
     right_bg:draw(903, 0, 903 + 1017, 1080)
 
-    offset(80, 200, function()
+    offset(0, 0, function()
         topic_left:draw()
     end)
-
-    draw_heading_light(font, 475, 100, "YOU ARE HERE")
 
     offset(1030, 0, function()
         draw_heading_dark(font, 430, 100, "HAPPENING NOW")
