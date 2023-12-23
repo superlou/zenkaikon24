@@ -3,12 +3,22 @@ local class = require "middleclass"
 local Tween = class("Tween")
 local Tweener = class("Tweener")
 
+local dummy = {}
+
 function Tweener:initialize()
     self.tweens = {}
 end
 
-function Tweener:add_tween(tween)
+function Tweener:tween(target_obj, target_property, start_val, finish_val, duration)
+    local tween = Tween:new(target_obj, target_property, start_val, finish_val, duration)
     table.insert(self.tweens, tween)
+    return tween
+end
+
+function Tweener:timer(delay)
+    local tween = Tween:new(dummy, "_", 0, 0, 0):delay(delay)
+    table.insert(self.tweens, tween)
+    return tween
 end
 
 function Tweener:update(dt)
@@ -37,7 +47,6 @@ function Tween:initialize(target_obj, target_property, start_val, finish_val, du
     self.remaining_delay = 0
     self.done = false
     self.done_fn = function() end
-    tweener:add_tween(self)
 end
 
 function Tween:delay(delay)
@@ -73,5 +82,4 @@ function Tween:is_done()
     return self.done
 end
 
-
-return {Tween, tweener}
+return tweener

@@ -1,6 +1,6 @@
 require "color_util"
 require "text_util"
-local Tween, _ = unpack(require "tween")
+local tw = require "tween"
 local class = require "middleclass"
 
 local heading_dark_bg = create_color_resource_hex("e91e63")
@@ -31,9 +31,9 @@ function Heading:initialize(text, heading_style)
     self.text_y_offset = 0
     self.text_alpha = 0
     self.width_animator = 0
-    Tween:new(self, "text_y_offset", 40, 0, 0.5)
-    Tween:new(self, "text_alpha", 0, 1, 0.5)
-    Tween:new(self, "width_animator", 0.8, 1, 0.5)
+    tw:tween(self, "text_y_offset", 40, 0, 0.5)
+    tw:tween(self, "text_alpha", 0, 1, 0.5)
+    tw:tween(self, "width_animator", 0.8, 1, 0.5)
 end
 
 function Heading:draw()
@@ -52,8 +52,8 @@ function Heading:draw()
 end
 
 function Heading:start_exit()
-    Tween:new(self, "text_alpha", 1, 0, 0.5)
-    Tween:new(self, "width_animator", 1, 0, 0.5)
+    tw:tween(self, "text_alpha", 1, 0, 0.5)
+    tw:tween(self, "width_animator", 1, 0, 0.5)
 end
 
 return Heading

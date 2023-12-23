@@ -7,7 +7,7 @@ local Clock = require "clock"
 local offset = require "offset"
 local json = require "json"
 local TopicPlayer = require "topic_player"
-local Tween, tweener = unpack(require "tween")
+local tw = require "tween"
 
 local font = resource.load_font "font_Lato-Regular.ttf"
 local right_bg = resource.load_image "img_right_bg.png"
@@ -51,7 +51,7 @@ json_watch("config.json", function(config)
 end)
 
 function node.render()
-    tweener:update(1 / 60)
+    tw:update(1 / 60)
 
     gl.clear(1, 1, 1, 1)
     right_bg:draw(903, 0, 903 + 1017, 1080)
