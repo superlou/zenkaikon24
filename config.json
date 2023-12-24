@@ -38,5 +38,12 @@
         "heading":"Something Else?",
         "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
         "message":"The second message."
+    }],
+    "right_topic_player": [{
+        "device": "",
+        "duration": 5,
+        "heading": "Free Snacks!",
+        "media": {},
+        "message": "Free snacks."
     }]
 }

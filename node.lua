@@ -36,7 +36,27 @@ local left_style = {
     heading_y = 100,
 }
 
+local right_style = {
+    heading = {
+        style = "box",
+        font = font,
+        text_color = "ffffff",
+        font_size = 64,
+        padding = 50,
+        bg_color = "e91e63",
+        shadow_color = "bb114b",
+    },
+    text = {
+        font = font,
+        color = "ffffff",
+    },
+    margin = 80,
+    message_y = 180,
+    heading_y = 100,
+}
+
 local topic_left = TopicPlayer(1050, 970, left_style)
+local topic_right = TopicPlayer(850, 970, right_style)
 
 util.data_mapper {
     ["clock/update"] = function(data)
@@ -49,20 +69,7 @@ json_watch("config.json", function(config)
     ticker:set_speed(config.ticker_speed)
     ticker:set_msgs_from_config(config)
     topic_left:set_topics_from_config(config["left_topic_player"])
-end)
-
-local hdg = Heading("Happening Now", {
-    style = "box",
-    font = font,
-    text_color = "ffffff",
-    font_size = 64,
-    padding = 50,
-    bg_color = "e91e63",
-    shadow_color = "bb114b",
-})
-
-tw:timer(5):on_done(function()
-    hdg:start_exit()
+    topic_right:set_topics_from_config(config["right_topic_player"])
 end)
 
 function node.render()
@@ -75,8 +82,8 @@ function node.render()
         topic_left:draw()
     end)
 
-    offset(1460, 100, function()
-        hdg:draw()
+    offset(1070, 0, function()
+        topic_right:draw()
     end)
 
     ticker:draw()
