@@ -42,8 +42,8 @@
     "right_topic_player": [{
         "device": "",
         "duration": 5,
-        "heading": "Free Snacks!",
+        "heading": "Happening Now",
         "media": {},
-        "message": "Free snacks."
+        "message": "!session-list\ndata:data_sessions_now.json"
     }]
 }

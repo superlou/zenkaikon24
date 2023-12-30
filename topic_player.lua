@@ -2,6 +2,7 @@ local class = require "middleclass"
 
 local TopicPlayer = class("TopicPlayer")
 local InfoTopic = require "topic_info"
+local SessionListTopic = require "topic_session_list"
 
 function TopicPlayer:initialize(w, h, style, bg)
     self.w, self.h = w, h
@@ -34,8 +35,23 @@ function TopicPlayer:draw()
     self.active_topic:draw()
 end
 
+function string:startswith(start)
+    return self:sub(1, #start) == start
+end
+
 function TopicPlayer:create_topic(topic_config)
-    -- For now, always make an InfoTopic
+    local msg = topic_config.message
+
+    if msg:startswith("!session-list") then
+        return SessionListTopic:new(
+            self.w, self.h, self.style,
+            topic_config.duration,
+            topic_config.heading,
+            topic_config.message
+        )
+    end
+
+    -- Otherwise, make an InfoTopic
     return InfoTopic:new(self.w, self.h, self.style,
                          topic_config.duration,
                          topic_config.heading,

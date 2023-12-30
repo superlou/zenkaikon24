@@ -1,15 +1,15 @@
 require "color_util"
 local class = require "middleclass"
 local Topic = require "topic"
-local InfoTopic = class("InfoTopic", Topic)
 require "text_util"
 local tw = require "tween"
 local Heading = require "heading"
 local offset = require "offset"
 
+local InfoTopic = class("InfoTopic", Topic)
+
 function InfoTopic:initialize(w, h, style, duration, heading, text)
     Topic.initialize(self, w, h, style, duration)
-    self.heading = heading
     self.text = text
     self.text_color = {hex2rgb(self.style.text.color)}
     self.font_size = 40
