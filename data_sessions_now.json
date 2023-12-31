@@ -1,18 +1,11 @@
 {
     "meta": {},
     "sessions": [
-        {
-            "name": "Event 1",
-            "location": "Room 1",
-            "start": "2023-12-29T13:00:00",
-            "finish": "2023-12-29T13:50:00"
-        },
-        {
-            "name": "Event 2",
-            "location": "Room 2",
-            "start": "2023-12-29T13:00:00",
-            "finish": "2023-12-29T13:50:00"
-        }
+        {"name": "Event 1", "location": "Room 1", "start_hhmm": "12:00", "start_ampm": "pm"},
+        {"name": "Event 2", "location": "Room 2", "start_hhmm": "1:15", "start_ampm": "pm"},
+        {"name": "Event 3", "location": "Room 3", "start_hhmm": "2:00", "start_ampm": "pm"},
+        {"name": "Event 4", "location": "Room 1", "start_hhmm": "3:00", "start_ampm": "pm"},
+        {"name": "Event 5", "location": "Room 2", "start_hhmm": "3:00", "start_ampm": "pm"},
+        {"name": "Event 6", "location": "Room 6A", "start_hhmm": "3:00", "start_ampm": "pm"}
     ]
-
 }

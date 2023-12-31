@@ -45,5 +45,11 @@
         "heading": "Happening Now",
         "media": {},
         "message": "!session-list\ndata:data_sessions_now.json"
+    }, {
+        "device": "",
+        "duration": 5,
+        "heading": "Starting Soon",
+        "media": {},
+        "message": "!session-list\ndata:data_sessions_soon.json"
     }]
 }

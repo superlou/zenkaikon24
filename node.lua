@@ -32,8 +32,8 @@ local left_style = {
         color = "333195",
     },
     margin = 100,
-    message_y = 180,
     heading_y = 100,
+    message_y = 180,
 }
 
 local right_style = {
@@ -51,12 +51,12 @@ local right_style = {
         color = "ffffff",
     },
     margin = 80,
-    message_y = 180,
     heading_y = 100,
+    message_y = 180,
 }
 
 local topic_left = TopicPlayer(1050, 970, left_style)
-local topic_right = TopicPlayer(850, 970, right_style)
+local topic_right = TopicPlayer(870, 970, right_style)
 
 util.data_mapper {
     ["clock/update"] = function(data)
@@ -82,7 +82,7 @@ function node.render()
         topic_left:draw()
     end)
 
-    offset(1070, 0, function()
+    offset(1040, 0, function()
         topic_right:draw()
     end)
 
