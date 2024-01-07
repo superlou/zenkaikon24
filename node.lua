@@ -10,8 +10,7 @@ local TopicPlayer = require "topic_player"
 local tw = require "tween"
 
 local font = resource.load_font "font_Lato-Regular.ttf"
-local right_bg = resource.load_image "img_right_bg.png"
-local right_bg_fold = resource.load_image "img_right_bg_fold.png"
+local right_bg = resource.load_image "img_right_bg_wide.png"
 local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
 local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 
@@ -31,7 +30,7 @@ local left_style = {
         font = font,
         color = "333195",
     },
-    margin = 100,
+    margin = 70,
     heading_y = 100,
     message_y = 180,
 }
@@ -55,8 +54,8 @@ local right_style = {
     message_y = 180,
 }
 
-local topic_left = TopicPlayer(1050, 970, left_style)
-local topic_right = TopicPlayer(870, 970, right_style)
+local topic_left = TopicPlayer(640, 970, left_style)
+local topic_right = TopicPlayer(1150, 970, right_style)
 
 util.data_mapper {
     ["clock/update"] = function(data)
@@ -76,19 +75,18 @@ function node.render()
     tw:update(1 / 60)
 
     gl.clear(1, 1, 1, 1)
-    right_bg:draw(903, 0, 903 + 1017, 1080)
+    right_bg:draw(521, 0, 521 + 1399, 1080)
 
     offset(0, 0, function()
         topic_left:draw()
     end)
 
-    offset(1040, 0, function()
+    offset(710, 0, function()
         topic_right:draw()
     end)
 
     ticker:draw()
 
-    right_bg_fold:draw(885, 1048, 885 + 1035, 1048 + 32)
     ticker_left_crop:draw(0, 964, 47, 964 + 116)
     ticker_right_crop:draw(1692, 964, 1692 + 228, 964 + 116)
 

@@ -45,6 +45,11 @@
                 "name": "device",
                 "type": "device"
             }]
+        },
+        {
+            "title": "Debug Datetimte",
+            "name": "debug_datetime",
+            "type": "string"
         }
     ]
 }

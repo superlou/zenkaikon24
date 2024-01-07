@@ -25,6 +25,7 @@
         {"ticker_text_msg":"Second ticker message"},
         {"ticker_text_msg":"Last ticker message"}
     ],
+    "debug_datetime": "",
     "ticker_speed": 2.0,
     "left_topic_player":[{
         "device":"",
