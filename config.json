@@ -26,6 +26,8 @@
         {"ticker_text_msg":"Last ticker message"}
     ],
     "debug_datetime": "",
+    "guidebook_api_key": "",
+    "guidebook_guide_id": "159116",
     "ticker_speed": 2.0,
     "left_topic_player":[{
         "device":"",

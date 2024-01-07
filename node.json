@@ -47,6 +47,16 @@
             }]
         },
         {
+            "title": "Guidebook API Key",
+            "name": "guidebook_api_key",
+            "type": "string"
+        },
+        {
+            "title": "Guidebook Guide ID",
+            "name": "guidebook_guide_id",
+            "type": "string"
+        },
+        {
             "title": "Debug Datetimte",
             "name": "debug_datetime",
             "type": "string"
