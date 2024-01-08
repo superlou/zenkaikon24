@@ -2,10 +2,11 @@
 import os
 import time
 import socket
+import json
 from pprint import pprint
 from py_hosted import config, node
 from py_clock import update_time, determine_now
-from py_guidebook import Guidebook
+from py_guidebook import Guidebook, build_session_list
 
 config.restart_on_update()
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -17,9 +18,9 @@ else:
     guidebook_api_key = os.getenv("GUIDEBOOK_API_KEY", "")
 
 guidebook = Guidebook(guidebook_api_key)
-locations = guidebook.get_locations(config.guidebook_guide_id)
-pprint(len(locations))
-pprint(locations)
+sessions_list = build_session_list(guidebook, config.guidebook_guide_id)
+with open("data_sessions.json", "w") as f:
+    json.dump(sessions_list, f)
 
 while True:
     now = determine_now(config.debug_datetime)
