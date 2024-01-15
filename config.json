@@ -25,7 +25,7 @@
         {"ticker_text_msg":"Second ticker message"},
         {"ticker_text_msg":"Last ticker message"}
     ],
-    "debug_datetime": "",
+    "debug_datetime": "2019-06-07T18:00:00",
     "guidebook_api_key": "",
     "guidebook_guide_id": "159116",
     "ticker_speed": 2.0,

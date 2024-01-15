@@ -1,3 +1,6 @@
+import json
+from datetime import datetime
+import traceback
 import requests
 
 class Guidebook:
@@ -70,3 +73,83 @@ def build_session_list(guidebook, guide_id):
     } for session in sessions]
 
     return sessions
+
+
+GUIDEBOOK_TIMESTAMP_FMT = "%Y-%m-%dT%H:%M:%S.%f+0000"
+
+
+def load_sessions_from_file(filename):
+    try:
+        data = json.load(open(filename))
+        return [{
+            "start": datetime.strptime(session["start"], GUIDEBOOK_TIMESTAMP_FMT),
+            "finish": datetime.strptime(session["finish"], GUIDEBOOK_TIMESTAMP_FMT),
+            "name": session["name"],
+            "locations": session["locations"],
+        } for session in data]
+    except Exception:
+        traceback.print_exc()
+        return []
+
+def save_sessions_to_file(sessions, filename):
+    session_data = [{
+        "start": datetime.strftime(session["start"], GUIDEBOOK_TIMESTAMP_FMT),
+        "finish": datetime.strftime(session["finish"], GUIDEBOOK_TIMESTAMP_FMT),
+        "name": session["name"],
+        "locations": session["locations"],        
+    } for session in sessions]
+
+    with open(filename, "w") as f:
+        json.dump(session_data, f)
+
+
+def update_guidebook_data(node, api_key, guide_id):
+    # Make sure there's always some kind of sessions list to work with.
+    saved_sessions_list = load_sessions_from_file("data_sessions.json")
+
+    # Attempt to get data from Guidebook, and fall back to saved data
+    # if not successful.
+    try:
+        guidebook = Guidebook(api_key)
+        sessions_list = build_session_list(guidebook, guide_id)
+    except Exception:
+        node.send_json("guidebook/update", {
+            "success": False,
+            "updated": False,
+            "msg": "Failed to retrieve Guidebook data",
+        })
+        print("Failed to retrieve Guidebook data")
+        return saved_sessions_list
+
+    # If no data has changed, return early.
+    if sessions_list == saved_sessions_list:
+        node.send_json("guidebook/update", {
+            "success": True,
+            "updated": False,
+            "msg": "Guidebook data unchanged",
+        })
+        print("Guidebook data unchanged")
+        return saved_sessions_list
+
+    # Otherwise, persist the data, and reload it so everything
+    # is formatted properly.
+    with open("data_sessions.json", "w") as f:
+        json.dump(sessions_list, f)
+
+    sessions_list = load_sessions_from_file("data_sessions.json")
+    node.send_json("guidebook/update", {
+        "success": True,
+        "updated": True,
+        "msg": "Guidebook data updated",
+    })
+    print("Guidebook data updated")
+    return sessions_list
+
+
+def write_sessions_now(sessions, now):
+    sessions_now = [
+        session for session in sessions
+        if now >= session["start"] and now <= session["finish"]
+    ]
+
+    save_sessions_to_file(sessions_now, "data_sessions_now.json")
