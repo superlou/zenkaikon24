@@ -1,9 +1,1 @@
-{
-    "meta": {},
-    "sessions": [
-        {"name": "Event Soon 1", "location": "Room 1", "start_hhmm": "12:00", "start_ampm": "pm"},
-        {"name": "Event Soon 2", "location": "Room 2", "start_hhmm": "1:15", "start_ampm": "pm"},
-        {"name": "Event Soon 3", "location": "Room 3", "start_hhmm": "2:00", "start_ampm": "pm"},
-        {"name": "Event Soon 4", "location": "Room 1", "start_hhmm": "3:00", "start_ampm": "pm"}
-    ]
-}
+[{"start_ampm": "pm", "start_hhmm": "7:15", "name": "Friday AMV Non-Finalists", "locations": ["318 - AMV Theatre"]}, {"start_ampm": "pm", "start_hhmm": "7:30", "name": "Cosplay Meetup - Super SMASH Bros", "locations": ["407 - Cosplay Meetup"]}, {"start_ampm": "pm", "start_hhmm": "7:30", "name": "Josei-muke and Otome Games", "locations": ["304 - Panel Room 4"]}, {"start_ampm": "pm", "start_hhmm": "7:30", "name": "Hall Cosplay Judging", "locations": ["405/406 - Hall Cosplay/Burlesque"]}, {"start_ampm": "pm", "start_hhmm": "7:45", "name": "Autographs: Ellyn Stern, Lex Lang, Richard Epcar, Sandy Fox", "locations": ["408 - Autographs 1"]}]

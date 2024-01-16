@@ -7,7 +7,7 @@ from datetime import timedelta
 from pprint import pprint
 from py_hosted import config, node
 from py_clock import update_time, determine_now
-from py_guidebook import update_guidebook_data, write_sessions_now
+from py_guidebook import update_guidebook_data, write_sessions_now, write_sessions_soon
 
 config.restart_on_update()
 sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -31,7 +31,7 @@ def update_guidebook_thread():
         data = update_guidebook_data(node, guidebook_api_key, config.guidebook_guide_id)       
         now = determine_now(config.debug_datetime)
         write_sessions_now(data, now)
-        
+        write_sessions_soon(data, now)
         time.sleep(60)
 
 

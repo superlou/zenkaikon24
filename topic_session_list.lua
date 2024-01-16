@@ -21,7 +21,7 @@ function SessionListTopic:initialize(w, h, style, duration, heading, text)
     self.sessions_data = json.decode(session_data_text)
 
     self.sessions_per_page = 5  -- todo This should be based on height and session size
-    self.sessions_by_page = list.split_every_n(self.sessions_data.sessions, self.sessions_per_page)
+    self.sessions_by_page = list.split_every_n(self.sessions_data, self.sessions_per_page)
     self.session_items = {}     -- the session drawing objects
 
     if #self.sessions_by_page == 0 then
@@ -41,7 +41,7 @@ function SessionListTopic:load_page()
 
     for i, session in ipairs(sessions) do
         local item = SessionListItem:new(
-            session.name, session.location, session.start_hhmm, session.start_ampm,
+            session.name, session.locations, session.start_hhmm, session.start_ampm,
             self.w, 200,
             self.duration,
             (i - 1) * 0.1,
@@ -82,9 +82,9 @@ function SessionListTopic:draw()
     end
 end
 
-function SessionListItem:initialize(name, location, start_hhmm, start_ampm, w, h, duration, enter_delay, style)
+function SessionListItem:initialize(name, locations, start_hhmm, start_ampm, w, h, duration, enter_delay, style)
     self.name = name
-    self.location = location
+    self.locations = locations
     self.start_hhmm = start_hhmm
     self.start_ampm = start_ampm
     self.w, self.h = w, h
@@ -126,10 +126,12 @@ function SessionListItem:draw()
         r, g, b, self.alpha
     )
 
-    self.font:write(
-        self.date_w + 30, 60, self.location, self.font_size * 0.8,
-        r, g, b, self.alpha
-    )
+    if #self.locations > 0 then
+        self.font:write(
+            self.date_w + 30, 60, self.locations[1], self.font_size * 0.8,
+            r, g, b, self.alpha
+        )
+    end
 end
 
 return SessionListTopic

@@ -1,5 +1,6 @@
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
+import time
 import traceback
 import requests
 
@@ -91,17 +92,6 @@ def load_sessions_from_file(filename):
         traceback.print_exc()
         return []
 
-def save_sessions_to_file(sessions, filename):
-    session_data = [{
-        "start": datetime.strftime(session["start"], GUIDEBOOK_TIMESTAMP_FMT),
-        "finish": datetime.strftime(session["finish"], GUIDEBOOK_TIMESTAMP_FMT),
-        "name": session["name"],
-        "locations": session["locations"],        
-    } for session in sessions]
-
-    with open(filename, "w") as f:
-        json.dump(session_data, f)
-
 
 def update_guidebook_data(node, api_key, guide_id):
     # Make sure there's always some kind of sessions list to work with.
@@ -146,10 +136,34 @@ def update_guidebook_data(node, api_key, guide_id):
     return sessions_list
 
 
-def write_sessions_now(sessions, now):
+def save_sessions_for_topic_list(sessions, filename):
+    session_data = [{
+        "start_hhmm": datetime.strftime(session["start"], "%I:%M").lstrip("0"),
+        "start_ampm": datetime.strftime(session["start"], "%P"),
+        "name": session["name"],
+        "locations": session["locations"],        
+    } for session in sessions]
+
+    with open(filename, "w") as f:
+        json.dump(session_data, f)
+
+
+def write_sessions_now(sessions, now, max_duration=timedelta(hours=3.5)):
     sessions_now = [
-        session for session in sessions
-        if now >= session["start"] and now <= session["finish"]
+        s for s in sessions
+        if now >= s["start"] and now <= s["finish"] and (s["finish"] - s["start"]) < max_duration
     ]
 
-    save_sessions_to_file(sessions_now, "data_sessions_now.json")
+    save_sessions_for_topic_list(sessions_now, "data_sessions_now.json")
+
+
+def write_sessions_soon(sessions, now, max_duration=timedelta(hours=3.5)):
+    def is_soon(now, start, finish):
+        return start > (now + timedelta(hours=1)) and start < (now + timedelta(hours=2))
+
+    sessions_soon = [
+        s for s in sessions
+        if is_soon(now, s["start"], s["finish"]) and (s["finish"] - s["start"]) < max_duration
+    ]
+
+    save_sessions_for_topic_list(sessions_soon, "data_sessions_soon.json")
