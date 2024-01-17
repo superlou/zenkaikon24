@@ -3,6 +3,7 @@ local Topic = require "topic"
 local tw = require "tween"
 local json = require "json"
 local list = require "list_util"
+require "text_util"
 
 local SessionListTopic = class("SessionListTopic", Topic)
 local SessionListItem = class("SessionListItem")
@@ -121,9 +122,11 @@ function SessionListItem:draw()
         r, g, b, self.alpha
     )    
 
-    self.font:write(
-        self.date_w + 30, 0, self.name, self.font_size,
-        r, g, b, self.alpha
+    draw_text_in_window(
+        self.name,
+        self.date_w + 30, 0, self.w - 120,
+        self.font_size, self.font_size, self.font,
+        r, g, b, self.alpha, 0
     )
 
     if #self.locations > 0 then

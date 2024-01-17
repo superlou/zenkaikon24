@@ -81,7 +81,7 @@ function node.render()
         topic_left:draw()
     end)
 
-    offset(710, 0, function()
+    offset(680, 0, function()
         topic_right:draw()
     end)
 
