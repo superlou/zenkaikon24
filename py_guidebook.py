@@ -159,7 +159,7 @@ def write_sessions_now(sessions, now, max_duration=timedelta(hours=3.5)):
 
 def write_sessions_soon(sessions, now, max_duration=timedelta(hours=3.5)):
     def is_soon(now, start, finish):
-        return start > (now + timedelta(hours=1)) and start < (now + timedelta(hours=2))
+        return start > now and start <= (now + timedelta(hours=1))
 
     sessions_soon = [
         s for s in sessions
