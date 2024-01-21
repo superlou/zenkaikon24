@@ -19,6 +19,10 @@ function TopicPlayer:set_topics_from_config(config)
 end
 
 function TopicPlayer:draw()
+    if #self.topic_configs == 0 then
+        return
+    end
+
     if self.bg then self.bg:draw(0, 0, self.w, self.h) end
 
     if self.active_topic == nil or self.active_topic:is_done() then
