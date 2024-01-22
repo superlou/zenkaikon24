@@ -1,5 +1,7 @@
 import json
 from datetime import datetime, timedelta
+# Required for https://stackoverflow.com/questions/32245560/module-object-has-no-attribute-strptime-with-several-threads-python
+import _strptime
 import time
 import traceback
 import requests
