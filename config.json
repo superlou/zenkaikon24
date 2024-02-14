@@ -32,9 +32,9 @@
     "left_topic_player":[{
         "device":"",
         "duration":5,
-        "heading":"Announcement!",
+        "heading":"Today",
         "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
-        "message":"This is some very long text that should be long enough to wrap.\n \nIt also has multiple lines!"
+        "message":"!session-brief\ndata:data_sessions_all_day.json"
     }, {
         "device":"",
         "duration":5,

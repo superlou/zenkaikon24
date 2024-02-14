@@ -3,6 +3,7 @@ local class = require "middleclass"
 local TopicPlayer = class("TopicPlayer")
 local InfoTopic = require "topic_info"
 local SessionListTopic = require "topic_session_list"
+local SessionBriefTopic = require "topic_session_brief"
 
 function TopicPlayer:initialize(w, h, style, bg)
     self.w, self.h = w, h
@@ -48,6 +49,13 @@ function TopicPlayer:create_topic(topic_config)
 
     if msg:startswith("!session-list") then
         return SessionListTopic:new(
+            self.w, self.h, self.style,
+            topic_config.duration,
+            topic_config.heading,
+            topic_config.message
+        )
+    elseif msg:startswith("!session-brief") then
+        return SessionBriefTopic:new(
             self.w, self.h, self.style,
             topic_config.duration,
             topic_config.heading,

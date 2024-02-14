@@ -1,5 +1,6 @@
 import json
 from datetime import datetime, timedelta
+import pprint
 # Required for https://stackoverflow.com/questions/32245560/module-object-has-no-attribute-strptime-with-several-threads-python
 import _strptime
 import time
@@ -135,13 +136,39 @@ def update_guidebook_data(node, api_key, guide_id):
         "msg": "Guidebook data updated",
     })
     print("Guidebook data updated")
+
     return sessions_list
+
+
+def starts_today(now, start):
+    today_midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
+    today_start = today_midnight + timedelta(hours=5)
+    today_finish = today_start + timedelta(hours=24)
+    return today_start <= start < today_finish
+
+
+def add_session_metadata(sessions, now):
+    """ Add information that is used repeatedly"""
+    for session in sessions:
+        start = session["start"]
+        finish = session["finish"]
+        session["duration"] = finish - start
+        session["is_open"] = now >= start and now <= finish
+        session["is_before_start"] = now < start
+        session["is_after_finish"] = now > finish
+        session["is_soon"] = start > now and start <= (now + timedelta(hours=1))
+        session["starts_today"] = starts_today(now, start)
 
 
 def save_sessions_for_topic_list(sessions, filename):
     session_data = [{
         "start_hhmm": datetime.strftime(session["start"], "%I:%M").lstrip("0"),
         "start_ampm": datetime.strftime(session["start"], "%P"),
+        "finish_hhmm": datetime.strftime(session["finish"], "%I:%M").lstrip("0"),
+        "finish_ampm": datetime.strftime(session["finish"], "%P"),
+        "is_open": session["is_open"],
+        "is_before_start": session["is_before_start"],
+        "is_after_finish": session["is_after_finish"],
         "name": session["name"],
         "locations": session["locations"],        
     } for session in sessions]
@@ -150,22 +177,28 @@ def save_sessions_for_topic_list(sessions, filename):
         json.dump(session_data, f)
 
 
-def write_sessions_now(sessions, now, max_duration=timedelta(hours=3.5)):
+def write_sessions_now(sessions, now, max_duration=timedelta(hours=4.5)):
     sessions_now = [
         s for s in sessions
-        if now >= s["start"] and now <= s["finish"] and (s["finish"] - s["start"]) < max_duration
+        if s["is_open"] and s["duration"] <= max_duration
     ]
 
     save_sessions_for_topic_list(sessions_now, "data_sessions_now.json")
 
 
-def write_sessions_soon(sessions, now, max_duration=timedelta(hours=3.5)):
-    def is_soon(now, start, finish):
-        return start > now and start <= (now + timedelta(hours=1))
-
+def write_sessions_soon(sessions, now, max_duration=timedelta(hours=4.5)):
     sessions_soon = [
         s for s in sessions
-        if is_soon(now, s["start"], s["finish"]) and (s["finish"] - s["start"]) < max_duration
+        if s["is_soon"] and s["duration"] <= max_duration
     ]
 
     save_sessions_for_topic_list(sessions_soon, "data_sessions_soon.json")
+
+
+def write_sessions_all_day(sessions, now, min_duration=timedelta(hours=4.5)):
+    sessions_all_day = [
+        s for s in sessions
+        if s["starts_today"] and s["duration"] > min_duration
+    ]
+
+    save_sessions_for_topic_list(sessions_all_day, "data_sessions_all_day.json")
