@@ -143,25 +143,25 @@ function SessionBriefItem:draw()
     local r, g, b = unpack(self.text_color)
 
     self.font:write(
-        450, 5, self.status1, self.font_size * 0.4,
+        470, 15, self.status1, self.font_size * 0.5,
         r, g, b, self.alpha
     )
 
     self.font:write(
-        450, 25, self.status2, self.font_size * 0.4,
+        470, 50, self.status2, self.font_size * 0.5,
         r, g, b, self.alpha
     )
 
     draw_text_in_window(
         self.name,
-        20, 0, self.w - 240,
+        40, 0, self.w - 240,
         self.font_size, self.font_size, self.font,
         r, g, b, self.alpha, 0
     )
 
     if #self.locations > 0 then
         self.font:write(
-            20, 60, self.locations[1], self.font_size * 0.5,
+            40, 60, self.locations[1], self.font_size * 0.5,
             r, g, b, self.alpha
         )
     end

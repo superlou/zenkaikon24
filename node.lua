@@ -2,6 +2,7 @@ gl.setup(1920, 1080)
 local Heading = require "heading"
 require "color_util"
 require "json_util"
+require "glass"
 local Ticker = require "ticker"
 local Clock = require "clock"
 local offset = require "offset"
@@ -10,14 +11,9 @@ local TopicPlayer = require "topic_player"
 local tw = require "tween"
 
 local font = resource.load_font "font_Lato-Regular.ttf"
-local right_bg = resource.load_image "img_right_bg_wide2.png"
+local right_bg = resource.load_image "img_right_bg_wide3.png"
 local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
 local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
-
-local glass1 = resource.load_image "img_glass1.png"
-local glass2 = resource.load_image "img_glass2.png"
-local glass3 = resource.load_image "img_glass3.png"
-local glass4 = resource.load_image "img_glass4.png"
 
 local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
 local clock = Clock:new(1710, 972, 200, 96)
@@ -76,30 +72,17 @@ json_watch("config.json", function(config)
     topic_right:set_topics_from_config(config["right_topic_player"])
 end)
 
-local t = 0
-
-function draw_glass()
-    local x, y = 1150, 280
-    glass1:draw(x, y, x + 123, y + 178, 0.2 * math.sin(2 * 3.1415 * 0.1 * t + 7) + 0.2)
-    local x, y = 1345, 210
-    glass2:draw(x, y, x + 100, y + 170, 0.2 * math.sin(2 * 3.1415 * 0.15 * t + 3.5) + 0.2)
-    local x, y = 1175, 40
-    glass3:draw(x, y, x + 160, y + 224, 0.5 * math.sin(2 * 3.1415 * 0.17 * t + 2) + 0.5)
-    local x, y = 1290, 315
-    glass4:draw(x, y, x + 52, y + 120, 0.3 * math.sin(2 * 3.1415 * 0.08 * t + 4.1) + 0.3)
-    t = t + 1 / 60
-end
-
 function node.render()
     tw:update(1 / 60)
 
     gl.clear(1, 1, 1, 1)
-    right_bg:draw(521, 0, 521 + 1399, 1080)
-    draw_glass()
 
     offset(0, 0, function()
         topic_left:draw()
     end)
+
+    right_bg:draw(575, 0, 575 + 1345, 1080)
+    draw_glass()
 
     offset(680, 0, function()
         topic_right:draw()
