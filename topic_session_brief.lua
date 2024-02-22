@@ -4,6 +4,7 @@ local tw = require "tween"
 local json = require "json"
 local list = require "list_util"
 require "text_util"
+require "color_util"
 
 local SessionBriefTopic = class("SessionBriefTopic", Topic)
 local SessionBriefItem = class("SessionBriefItem")
@@ -105,21 +106,21 @@ function SessionBriefItem:initialize(name, locations,
     self.duration = duration
     self.style = style
 
-    self.start = self.start_hhmm .. " " .. self.start_ampm
-    self.finish = self.finish_hhmm .. " " .. self.finish_ampm
+    self.start = self.start_hhmm .. string.sub(self.start_ampm, 1, 1)
+    self.finish = self.finish_hhmm .. string.sub(self.finish_ampm, 1, 1)
 
     self.status1 = ""
     self.status2 = ""
 
     if self.is_before_start then
-        self.status1 = "opens at"
+        self.status1 = "opens"
         self.status2 = self.start
     elseif self.is_open then
-        self.status1 = "closes at"
+        self.status1 = "until"
         self.status2 = self.finish
     else
         self.status1 = "closed"
-        self.status2 = ""
+        self.status2 = " "
     end
 
     self.text_color = {hex2rgb(self.style.text.color)}
@@ -139,22 +140,41 @@ function SessionBriefItem:initialize(name, locations,
     end)
 end
 
+local until_color = {hex2rgb("#2fc480")}
+local opens_color = {hex2rgb("#d9b630")}
+local closed_color = {hex2rgb("#d34848")}
+
+local img_until = resource.load_image("img_until.png")
+local img_closed = resource.load_image("img_closed.png")
+local img_opens = resource.load_image("img_opens.png")
+local img_none = resource.load_image("img_no_media.png")
+
 function SessionBriefItem:draw()
     local r, g, b = unpack(self.text_color)
 
-    self.font:write(
-        470, 15, self.status1, self.font_size * 0.5,
-        r, g, b, self.alpha
-    )
+    local status_img = img_none
+    local status_color = {1, 1, 1}
 
-    self.font:write(
-        470, 50, self.status2, self.font_size * 0.5,
-        r, g, b, self.alpha
+    if self.status1 == "opens" then
+        status_img = img_opens
+        status_color = opens_color
+    elseif self.status1 == "until" then
+        status_img = img_until
+        status_color = until_color
+    elseif self.status1 == "closed" then
+        status_img = img_closed
+        status_color = closed_color
+    end
+    
+    status_img:draw(490, 13, 490 + 82, 13 + 25, self.alpha)
+    write_centered(
+        self.font, 490 + 41, 50, self.status2, self.font_size * 0.5,
+        status_color[1], status_color[2], status_color[3], self.alpha
     )
 
     draw_text_in_window(
         self.name,
-        40, 0, self.w - 240,
+        40, 0, self.w - 210,
         self.font_size, self.font_size, self.font,
         r, g, b, self.alpha, 0
     )
