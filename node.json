@@ -1,10 +1,7 @@
 {
     "name": "Main Node",
     "options": [
-        {
-            "title": "Ticker",
-            "intro": "The ticker scrolls text along the bottom of the sign."
-        },
+
         {
             "title": "Ticker Messages",
             "name": "ticker_msgs",
