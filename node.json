@@ -23,6 +23,11 @@
             "type": "float"
         },
         {
+            "title": "Topic Players",
+            "intro": "The topic players cycle through \"topics\" on the left and right side of the sign.",
+            "type": "section"
+        },        
+        {
             "title": "Left Topic Player",
             "name": "left_topic_player",
             "type": "list",
@@ -79,7 +84,12 @@
                 "name": "device",
                 "type": "device"
             }]
-        },        
+        },
+        {
+            "title": "Guidebook information",
+            "intro": "Information to synchronize data from Guidebook.",
+            "type": "section"
+        },          
         {
             "title": "Guidebook API Key",
             "name": "guidebook_api_key",
@@ -91,9 +101,15 @@
             "type": "string"
         },
         {
+            "title": "Debug",
+            "intro": "Debugging configuration options used for testing.",
+            "type": "section"
+        },          
+        {
             "title": "Debug Datetime",
             "name": "debug_datetime",
-            "type": "string"
+            "type": "string",
+            "desc": "Force the date and time in the form YYYY-MM-DD%HH:MM:SS. Leave blank to use the current date and time."
         }
     ]
 }
