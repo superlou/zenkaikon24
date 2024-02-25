@@ -109,7 +109,7 @@
             "title": "Debug Datetime",
             "name": "debug_datetime",
             "type": "string",
-            "desc": "Force the date and time in the form YYYY-MM-DD%HH:MM:SS. Leave blank to use the current date and time."
+            "hint": "Force the date and time in the form YYYY-MM-DD%HH:MM:SS. Leave blank to use the current date and time."
         }
     ]
 }
