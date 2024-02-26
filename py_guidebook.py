@@ -147,12 +147,23 @@ def starts_today(now, start):
     return today_start <= start < today_finish
 
 
+def completed_fraction(now, start, duration):
+    completed_sec = (now - start).total_seconds()
+    duration_sec = duration.total_seconds()
+
+    if duration_sec > 0:
+        return max(min(completed_sec / duration_sec, 1.0), 0.0)
+    else:
+        return 1.0    
+
+
 def add_session_metadata(sessions, now):
     """ Add information that is used repeatedly"""
     for session in sessions:
         start = session["start"]
         finish = session["finish"]
         session["duration"] = finish - start
+        session["completed_fraction"] = completed_fraction(now, start, session["duration"])
         session["is_open"] = now >= start and now <= finish
         session["is_before_start"] = now < start
         session["is_after_finish"] = now > finish
@@ -166,6 +177,7 @@ def save_sessions_for_topic_list(sessions, filename):
         "start_ampm": datetime.strftime(session["start"], "%P"),
         "finish_hhmm": datetime.strftime(session["finish"], "%I:%M").lstrip("0"),
         "finish_ampm": datetime.strftime(session["finish"], "%P"),
+        "completed_fraction": session["completed_fraction"],
         "is_open": session["is_open"],
         "is_before_start": session["is_before_start"],
         "is_after_finish": session["is_after_finish"],

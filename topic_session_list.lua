@@ -4,9 +4,14 @@ local tw = require "tween"
 local json = require "json"
 local list = require "list_util"
 require "text_util"
+require "color_util"
 
 local SessionListTopic = class("SessionListTopic", Topic)
 local SessionListItem = class("SessionListItem")
+
+local white_img = resource.create_colored_texture(1, 1, 1, 1)
+local green_img = create_color_resource_hex("#2fc480")
+local red_img = create_color_resource_hex("#d34848")
 
 function SessionListTopic:initialize(w, h, style, duration, heading, text)
     Topic.initialize(self, w, h, style, duration)
@@ -43,6 +48,7 @@ function SessionListTopic:load_page()
     for i, session in ipairs(sessions) do
         local item = SessionListItem:new(
             session.name, session.locations, session.start_hhmm, session.start_ampm,
+            session.completed_fraction,
             self.w, 200,
             self.duration,
             (i - 1) * 0.1,
@@ -77,26 +83,34 @@ function SessionListTopic:draw()
     end)
 
     for i, session_item in ipairs(self.session_items) do
-        offset(0, self.style.message_y + (i - 1) * 140 + 60, function()
+        offset(20, self.style.message_y + (i - 1) * 140 + 60, function()
             session_item:draw()
         end)
     end
 end
 
-function SessionListItem:initialize(name, locations, start_hhmm, start_ampm, w, h, duration, enter_delay, style)
+function SessionListItem:initialize(name, locations, start_hhmm, start_ampm, 
+    completed_fraction, w, h, duration, enter_delay, style
+)
     self.name = name
     self.locations = locations
     self.start_hhmm = start_hhmm
     self.start_ampm = start_ampm
+    self.completed_fraction = completed_fraction
     self.w, self.h = w, h
     self.duration = duration
     self.style = style
 
+    for i, location in ipairs(self.locations) do
+        self.locations[i] = string.upper(location)
+    end
+
     self.text_color = {hex2rgb(self.style.text.color)}
     self.font_size = 50
     self.font = self.style.text.font
+    self.font_bold = self.style.text.font_bold
 
-    -- Calculations to right align
+    -- Calculations to right align time text
     self.date_w = 120
     self.start_hhmm_x = self.date_w - self.font:width(self.start_hhmm, self.font_size)
     self.start_ampm_x = self.date_w - self.font:width(self.start_ampm, self.font_size * 0.8)
@@ -112,15 +126,7 @@ end
 function SessionListItem:draw()
     local r, g, b = unpack(self.text_color)
 
-    self.font:write(
-        self.start_hhmm_x, 0, self.start_hhmm, self.font_size,
-        r, g, b, self.alpha
-    )
-
-    self.font:write(
-        self.start_ampm_x, 60, self.start_ampm, self.font_size * 0.8,
-        r, g, b, self.alpha
-    )    
+    self:draw_time()
 
     draw_text_in_window(
         self.name,
@@ -130,11 +136,37 @@ function SessionListItem:draw()
     )
 
     if #self.locations > 0 then
-        self.font:write(
-            self.date_w + 30, 60, self.locations[1], self.font_size * 0.8,
+        self.font_bold:write(
+            self.date_w + 31, 61, self.locations[1], self.font_size * 0.55,
             r, g, b, self.alpha
         )
     end
+end
+
+function SessionListItem:draw_time()
+    local r, g, b = unpack(self.text_color)
+
+    self.font:write(
+        self.start_hhmm_x, 0, self.start_hhmm, self.font_size,
+        r, g, b, self.alpha
+    )
+
+    self.font:write(
+        self.start_ampm_x, 52, self.start_ampm, self.font_size * 0.8,
+        r, g, b, self.alpha
+    )
+
+    local bar_y = 50
+    local bar_h = 4
+    local bar_w = self.date_w
+
+    local fill_img = green_img
+    if self.completed_fraction >= 0.9 then
+        fill_img = red_img
+    end
+
+    white_img:draw(0, bar_y, bar_w, bar_y + bar_h, self.alpha)
+    fill_img:draw(0, bar_y, bar_w * self.completed_fraction, bar_y + bar_h, self.alpha)
 end
 
 return SessionListTopic

@@ -11,6 +11,7 @@ local TopicPlayer = require "topic_player"
 local tw = require "tween"
 
 local font = resource.load_font "font_Lato-Regular.ttf"
+local font_bold = resource.load_font "font_Lato-Bold.ttf"
 local right_bg = resource.load_image "img_right_bg_wide3.png"
 local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
 local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
@@ -29,6 +30,7 @@ local left_style = {
     },
     text = {
         font = font,
+        font_bold = font_bold,
         color = "333195",
     },
     margin = 70,
@@ -48,6 +50,7 @@ local right_style = {
     },
     text = {
         font = font,
+        font_bold = font_bold,
         color = "ffffff",
     },
     margin = 80,
