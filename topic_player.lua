@@ -67,7 +67,8 @@ function TopicPlayer:create_topic(topic_config)
     return InfoTopic:new(self.w, self.h, self.style,
                          topic_config.duration,
                          topic_config.heading,
-                         topic_config.message)
+                         topic_config.message,
+                         topic_config.media)
 end
 
 return TopicPlayer

@@ -8,11 +8,15 @@ local offset = require "offset"
 
 local InfoTopic = class("InfoTopic", Topic)
 
-function InfoTopic:initialize(w, h, style, duration, heading, text)
+function InfoTopic:initialize(w, h, style, duration, heading, text, media)
     Topic.initialize(self, w, h, style, duration)
     self.text = text
     self.text_color = {hex2rgb(self.style.text.color)}
     self.font_size = 40
+
+    if media.filename ~= "img_no_media.png" then
+        self.background = resource.load_image(media.asset_name)
+    end
 
     self.style = style
     self.margin = self.style.margin
@@ -36,6 +40,10 @@ end
 
 function InfoTopic:draw()
     local r, g, b = unpack(self.text_color)
+
+    if self.background then
+        self.background:draw(0, 0, self.w, self.h, self.alpha)
+    end
 
     offset(self.w / 2, self.style.heading_y, function()
         self.heading:draw()

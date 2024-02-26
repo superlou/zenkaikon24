@@ -31,16 +31,32 @@
     "ticker_speed": 2.0,
     "left_topic_player":[{
         "device":"",
-        "duration":5,
+        "duration": 5,
         "heading":"Today",
         "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
         "message":"!session-brief\ndata:data_sessions_all_day.json"
     }, {
         "device":"",
         "duration":5,
-        "heading":"Something Else?",
-        "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
-        "message":"The second message."
+        "heading":"AUTOGRAPHS",
+        "media": {
+            "asset_id":1576303,
+            "asset_name":"test-asset-e34322bab2ee7b7196d23529692d86ec-example_autograph.png",
+            "filename":"example_autograph.png",
+            "metadata":{"format":"png", "height":964, "width":694}
+        },
+        "message":""
+    }, {
+        "device":"",
+        "duration":5,
+        "heading":"AUTOGRAPHS",
+        "media": {
+            "asset_id":1576303,
+            "asset_name":"test-asset-12345678b2ee1b7a96d23529692d86ec-example_autograph2.png",
+            "filename":"example_autograph2.png",
+            "metadata":{"format":"png", "height":964, "width":694}
+        },
+        "message":""
     }],
     "right_topic_player": [{
         "device": "",

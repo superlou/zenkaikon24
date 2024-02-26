@@ -174,7 +174,7 @@ function SessionBriefItem:draw()
 
     draw_text_in_window(
         self.name,
-        40, 0, self.w - 210,
+        40, 0, 435,
         self.font_size, self.font_size, self.font,
         r, g, b, self.alpha, 0
     )

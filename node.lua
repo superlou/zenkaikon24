@@ -55,7 +55,7 @@ local right_style = {
     message_y = 180,
 }
 
-local topic_left = TopicPlayer(640, 970, left_style)
+local topic_left = TopicPlayer(694, 964, left_style)
 local topic_right = TopicPlayer(1150, 970, right_style)
 
 util.data_mapper {
