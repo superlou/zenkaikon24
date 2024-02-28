@@ -1,5 +1,8 @@
 {
     "name": "Main Node",
+    "permissions": {
+        "network": "Needs to access Guidebook API"
+    },
     "options": [
         {
             "title": "Ticker",
