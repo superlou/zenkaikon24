@@ -109,6 +109,11 @@ def update_guidebook_data(node, api_key, guide_id, now):
     except Exception:
         node.send_json("/guidebook/update", {"status": "failed-guidebook-fetch"})
         print("Failed to retrieve Guidebook data")
+        add_session_metadata(saved_sessions_list, now)
+        write_sessions_now(saved_sessions_list, now)
+        write_sessions_soon(saved_sessions_list, now)
+        write_sessions_all_day(saved_sessions_list, now)
+        node.send_json("/guidebook/update", {"status": "failed-used-old-data"})
         return
 
     # If no data has changed, return early.
