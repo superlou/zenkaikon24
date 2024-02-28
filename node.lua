@@ -10,8 +10,6 @@ local json = require "json"
 local TopicPlayer = require "topic_player"
 local tw = require "tween"
 
-local font = resource.load_font "font_Lato-Regular.ttf"
-local font_bold = resource.load_font "font_Lato-Bold.ttf"
 local right_bg = resource.load_image "img_right_bg_wide3.png"
 local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
 local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
@@ -19,44 +17,9 @@ local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
 local clock = Clock:new(1710, 972, 200, 96)
 
-local left_style = {
-    heading = {
-        style = "underline",
-        font = font,
-        font_size = 64,
-        text_color = "333195",
-        shadow_color = "333195",
-        padding = 50,
-    },
-    text = {
-        font = font,
-        font_bold = font_bold,
-        color = "333195",
-    },
-    margin = 70,
-    heading_y = 100,
-    message_y = 180,
-}
-
-local right_style = {
-    heading = {
-        style = "box",
-        font = font,
-        text_color = "ffffff",
-        font_size = 64,
-        padding = 50,
-        bg_color = "e91e63",
-        shadow_color = "bb114b",
-    },
-    text = {
-        font = font,
-        font_bold = font_bold,
-        color = "ffffff",
-    },
-    margin = 80,
-    heading_y = 100,
-    message_y = 180,
-}
+local style = require "style"
+local left_style = style["left_style"]
+local right_style = style["right_style"]
 
 local topic_left = TopicPlayer(694, 964, left_style)
 local topic_right = TopicPlayer(1150, 970, right_style)
