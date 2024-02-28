@@ -96,7 +96,8 @@ def load_sessions_from_file(filename):
         return []
 
 
-def update_guidebook_data(node, api_key, guide_id):
+def update_guidebook_data(node, api_key, guide_id, now):
+    node.send_json("/guidebook/update", {"status": "updating"})
     # Make sure there's always some kind of sessions list to work with.
     saved_sessions_list = load_sessions_from_file("data_sessions.json")
 
@@ -106,38 +107,31 @@ def update_guidebook_data(node, api_key, guide_id):
         guidebook = Guidebook(api_key)
         sessions_list = build_session_list(guidebook, guide_id)
     except Exception:
-        node.send_json("guidebook/update", {
-            "success": False,
-            "updated": False,
-            "msg": "Failed to retrieve Guidebook data",
-        })
+        node.send_json("/guidebook/update", {"status": "failed-guidebook-fetch"})
         print("Failed to retrieve Guidebook data")
-        return saved_sessions_list
+        return
 
     # If no data has changed, return early.
     if sessions_list == saved_sessions_list:
-        node.send_json("guidebook/update", {
-            "success": True,
-            "updated": False,
-            "msg": "Guidebook data unchanged",
-        })
-        print("Guidebook data unchanged")
-        return saved_sessions_list
+        node.send_json("/guidebook/update", {"status": "unchanged"})
+        return
 
     # Otherwise, persist the data, and reload it so everything
     # is formatted properly.
+    node.send_json("/guidebook/update", {"status": "processing-new-data"})
     with open("data_sessions.json", "w") as f:
         json.dump(sessions_list, f)
 
     sessions_list = load_sessions_from_file("data_sessions.json")
-    node.send_json("guidebook/update", {
-        "success": True,
-        "updated": True,
-        "msg": "Guidebook data updated",
-    })
-    print("Guidebook data updated")
 
-    return sessions_list
+    add_session_metadata(sessions_list, now)
+    write_sessions_now(sessions_list, now)
+    write_sessions_soon(sessions_list, now)
+    write_sessions_all_day(sessions_list, now)
+
+    node.send_json("/guidebook/update", {"status": "updated"})
+
+    print("Guidebook data updated")
 
 
 def starts_today(now, start):

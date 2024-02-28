@@ -9,6 +9,7 @@ local offset = require "offset"
 local json = require "json"
 local TopicPlayer = require "topic_player"
 local tw = require "tween"
+local ServiceIndicator = require "service_indicator"
 
 local right_bg = resource.load_image "img_right_bg_wide3.png"
 local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
@@ -16,6 +17,7 @@ local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 
 local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
 local clock = Clock:new(1710, 972, 200, 96)
+local service_indicator = ServiceIndicator()
 
 local style = require "style"
 local left_style = style["left_style"]
@@ -28,6 +30,10 @@ util.data_mapper {
     ["clock/update"] = function(data)
         data = json.decode(data)
         clock:update(data.hh_mm, data.am_pm)
+    end;
+    ["guidebook/update"] = function(data)
+        data = json.decode(data)
+        service_indicator:update(data.status)
     end;
 }
 
@@ -60,4 +66,8 @@ function node.render()
     ticker_right_crop:draw(1692, 964, 1692 + 228, 964 + 116)
 
     clock:draw()
+
+    offset(1710, 1050, function()
+        service_indicator:draw()
+    end)
 end
