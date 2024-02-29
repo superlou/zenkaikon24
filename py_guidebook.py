@@ -106,8 +106,8 @@ def update_guidebook_data(node, api_key, guide_id, now):
     try:
         guidebook = Guidebook(api_key)
         sessions_list = build_session_list(guidebook, guide_id)
-    except Exception:
-        node.send_json("/guidebook/update", {"status": "failed-guidebook-fetch"})
+    except Exception as e:
+        node.send_json("/guidebook/update", {"status": "failed-guidebook-fetch", "exception": e})
         print("Failed to retrieve Guidebook data")
         add_session_metadata(saved_sessions_list, now)
         write_sessions_now(saved_sessions_list, now)
