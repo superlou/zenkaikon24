@@ -96,39 +96,47 @@ def load_sessions_from_file(filename):
         return []
 
 
+def send_update(node, status, code, desc, exception=None):
+    node.send_json("/guidebook/update", {
+        "status": status,
+        "code": code,
+        "desc": desc,
+        "exception": str(exception),
+    })
+
+
 def update_guidebook_data(node, api_key, guide_id, now):
-    node.send_json("/guidebook/update", {"status": "updating"})
     # Make sure there's always some kind of sessions list to work with.
     saved_sessions_list = load_sessions_from_file("data_sessions.json")
 
     # Attempt to get data from Guidebook, and fall back to saved data
     # if not successful.
     try:
+        send_update(node, "updating", 1, "Fetching")
         guidebook = Guidebook(api_key)
         sessions_list = build_session_list(guidebook, guide_id)
     except Exception as e:
-        node.send_json("/guidebook/update", {"status": "failed-guidebook-fetch", "exception": e})
-        print("Failed to retrieve Guidebook data")
+        send_update(node, "failed", 4, "Guidebook fetch failed, processing local data", e)
         add_session_metadata(saved_sessions_list, now)
         write_sessions_now(saved_sessions_list, now)
         write_sessions_soon(saved_sessions_list, now)
         write_sessions_all_day(saved_sessions_list, now)
-        node.send_json("/guidebook/update", {"status": "failed-used-old-data"})
+        send_update(node, "failed", 5, "Used local data")
         return
-
+    
     # If no data has changed, return early.
     if sessions_list == saved_sessions_list:
-        node.send_json("/guidebook/update", {"status": "processing-same-data"})
+        send_update(node, "updating", 6, "Processing identical local data")
         add_session_metadata(saved_sessions_list, now)
         write_sessions_now(saved_sessions_list, now)
         write_sessions_soon(saved_sessions_list, now)
         write_sessions_all_day(saved_sessions_list, now)        
-        node.send_json("/guidebook/update", {"status": "unchanged"})
+        send_update(node, "ok", 7, "Used identical local data")
         return
 
     # Otherwise, persist the data, and reload it so everything
     # is formatted properly.
-    node.send_json("/guidebook/update", {"status": "processing-new-data"})
+    send_update(node, "updating", 2, "Processing new Guidebook data")
     with open("data_sessions.json", "w") as f:
         json.dump(sessions_list, f)
 
@@ -138,10 +146,8 @@ def update_guidebook_data(node, api_key, guide_id, now):
     write_sessions_now(sessions_list, now)
     write_sessions_soon(sessions_list, now)
     write_sessions_all_day(sessions_list, now)
-
     node.send_json("/guidebook/update", {"status": "updated"})
-
-    print("Guidebook data updated")
+    send_update(node, "ok", 3, "Used new Guidebook data")
 
 
 def starts_today(now, start):

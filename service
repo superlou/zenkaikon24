@@ -3,12 +3,9 @@ import os
 import time
 import socket
 from threading import Thread
-from datetime import timedelta
-from pprint import pprint
 from py_hosted import config, node
 from py_clock import update_time, determine_now
-from py_guidebook import update_guidebook_data, write_sessions_now, write_sessions_soon
-from py_guidebook import write_sessions_all_day, add_session_metadata
+from py_guidebook import update_guidebook_data, send_update
 
 service_version = "0.1.0"
 
@@ -24,15 +21,29 @@ else:
 
 def update_time_thread():
     while True:
-        now = determine_now(config.debug_datetime)
-        update_time(node, now)
+        try:
+            now = determine_now(config.debug_datetime)
+            update_time(node, now)
+        except Exception as e:
+            pass
+
         time.sleep(1)
 
 
 def update_guidebook_thread():
     while True:
-        now = determine_now(config.debug_datetime)
-        update_guidebook_data(node, guidebook_api_key, config.guidebook_guide_id, now)
+        try:
+            now = determine_now(config.debug_datetime)
+            update_guidebook_data(
+                node,
+                guidebook_api_key,
+                config.guidebook_guide_id,
+                now
+            )
+        except Exception as e:
+            node.send_json("/guidebook/update", {"status": "failed-unexpected"})
+            send_update(node, "failed", 99, "Unexpected failure", e)
+
         time.sleep(60)
 
 

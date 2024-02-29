@@ -5,23 +5,27 @@ local font = resource.load_font "font_Lato-Regular.ttf"
 local ServiceIndicator = class("ServiceIndicator")
 
 function ServiceIndicator:initialize()
-    self.text = ""
-    self.alpha = 1
+    self.status = "ok"
+    self.code = 0
+    self.desc = ""
+    self.alpha = 0
 end
 
-function ServiceIndicator:update(status)
+function ServiceIndicator:update(status, code, desc)
     -- todo Handle all cases to fade out
-    if self.text ~= "updated" and status == "updated" then
+    if self.status ~= "ok" and status == "ok" then
         tw:tween(self, "alpha", 1, 0, 2)
     else
         self.alpha = 1
     end
 
-    self.text = status
+    self.status = status
+    self.code = code
+    self.desc = desc
 end
 
 function ServiceIndicator:draw()
-    font:write(0, 0, self.text, 24, 1, 1, 1, self.alpha)
+    font:write(0, 0, self.desc, 24, 1, 1, 1, self.alpha)
 end
 
 return ServiceIndicator

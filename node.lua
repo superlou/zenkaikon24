@@ -33,7 +33,7 @@ util.data_mapper {
     end;
     ["guidebook/update"] = function(data)
         data = json.decode(data)
-        service_indicator:update(data.status)
+        service_indicator:update(data.status, data.code, data.desc)
     end;
 }
 
