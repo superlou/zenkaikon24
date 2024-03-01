@@ -1,2 +1,4 @@
 *.pyc
 .env
+data_*.pkl
+data_*.json
