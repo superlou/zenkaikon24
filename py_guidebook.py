@@ -109,7 +109,7 @@ def update_guidebook_data(node, api_key, guide_id, now):
         sessions = build_session_list(guidebook, guide_id)
     except Exception as e:
         send_update(node, "failed", 4, "Guidebook fetch failed, processing local data", e)
-        sessions = load_sessions_pickle("data_guidebook.pkl")
+        sessions = load_sessions_pickle("SCRATCH/data_guidebook.pkl")
         add_session_metadata(sessions, now)
         write_sessions_now(sessions, now)
         write_sessions_soon(sessions, now)
@@ -117,7 +117,7 @@ def update_guidebook_data(node, api_key, guide_id, now):
         send_update(node, "failed", 5, "Used local data")
         return
 
-    pickle.dump(sessions, open("data_guidebook.pkl", "wb"), 2)
+    pickle.dump(sessions, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
     
     send_update(node, "updating", 2, "Processing new Guidebook data")
 
