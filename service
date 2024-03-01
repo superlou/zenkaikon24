@@ -2,6 +2,7 @@
 import os
 import time
 import socket
+import traceback
 from threading import Thread
 from py_hosted import config, node
 from py_clock import update_time, determine_now
@@ -43,6 +44,7 @@ def update_guidebook_thread():
         except Exception as e:
             node.send_json("/guidebook/update", {"status": "failed-unexpected"})
             send_update(node, "failed", 99, "Unexpected failure", e)
+            traceback.print_exc()
 
         time.sleep(60)
 

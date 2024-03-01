@@ -1,4 +1,5 @@
 import json
+import pickle
 from datetime import datetime, timedelta
 import pprint
 # Required for https://stackoverflow.com/questions/32245560/module-object-has-no-attribute-strptime-with-several-threads-python
@@ -71,8 +72,8 @@ def build_session_list(guidebook, guide_id):
     
     sessions = [{
         "name": session["name"],
-        "start": session["start_time"],
-        "finish": session["end_time"],
+        "start": datetime.strptime(session["start_time"], GUIDEBOOK_TIMESTAMP_FMT),
+        "finish": datetime.strptime(session["end_time"], GUIDEBOOK_TIMESTAMP_FMT),
         "locations": [location_map[loc_id] for loc_id in session["locations"]],
     } for session in sessions]
 
@@ -82,15 +83,9 @@ def build_session_list(guidebook, guide_id):
 GUIDEBOOK_TIMESTAMP_FMT = "%Y-%m-%dT%H:%M:%S.%f+0000"
 
 
-def load_sessions_from_file(filename):
+def load_sessions_pickle(filename):
     try:
-        data = json.load(open(filename))
-        return [{
-            "start": datetime.strptime(session["start"], GUIDEBOOK_TIMESTAMP_FMT),
-            "finish": datetime.strptime(session["finish"], GUIDEBOOK_TIMESTAMP_FMT),
-            "name": session["name"],
-            "locations": session["locations"],
-        } for session in data]
+        return pickle.load(open(filename, "rb"))
     except Exception:
         traceback.print_exc()
         return []
@@ -106,46 +101,30 @@ def send_update(node, status, code, desc, exception=None):
 
 
 def update_guidebook_data(node, api_key, guide_id, now):
-    # Make sure there's always some kind of sessions list to work with.
-    saved_sessions_list = load_sessions_from_file("data_sessions.json")
-
     # Attempt to get data from Guidebook, and fall back to saved data
     # if not successful.
     try:
         send_update(node, "updating", 1, "Fetching")
         guidebook = Guidebook(api_key)
-        sessions_list = build_session_list(guidebook, guide_id)
+        sessions = build_session_list(guidebook, guide_id)
     except Exception as e:
         send_update(node, "failed", 4, "Guidebook fetch failed, processing local data", e)
-        add_session_metadata(saved_sessions_list, now)
-        write_sessions_now(saved_sessions_list, now)
-        write_sessions_soon(saved_sessions_list, now)
-        write_sessions_all_day(saved_sessions_list, now)
+        sessions = load_sessions_pickle("data_guidebook.pkl")
+        add_session_metadata(sessions, now)
+        write_sessions_now(sessions, now)
+        write_sessions_soon(sessions, now)
+        write_sessions_all_day(sessions, now)
         send_update(node, "failed", 5, "Used local data")
         return
+
+    pickle.dump(sessions, open("data_guidebook.pkl", "wb"), 2)
     
-    # If no data has changed, return early.
-    if sessions_list == saved_sessions_list:
-        send_update(node, "updating", 6, "Processing identical local data")
-        add_session_metadata(saved_sessions_list, now)
-        write_sessions_now(saved_sessions_list, now)
-        write_sessions_soon(saved_sessions_list, now)
-        write_sessions_all_day(saved_sessions_list, now)        
-        send_update(node, "ok", 7, "Used identical local data")
-        return
-
-    # Otherwise, persist the data, and reload it so everything
-    # is formatted properly.
     send_update(node, "updating", 2, "Processing new Guidebook data")
-    with open("data_sessions.json", "w") as f:
-        json.dump(sessions_list, f)
 
-    sessions_list = load_sessions_from_file("data_sessions.json")
-
-    add_session_metadata(sessions_list, now)
-    write_sessions_now(sessions_list, now)
-    write_sessions_soon(sessions_list, now)
-    write_sessions_all_day(sessions_list, now)
+    add_session_metadata(sessions, now)
+    write_sessions_now(sessions, now)
+    write_sessions_soon(sessions, now)
+    write_sessions_all_day(sessions, now)
     node.send_json("/guidebook/update", {"status": "updated"})
     send_update(node, "ok", 3, "Used new Guidebook data")
 
