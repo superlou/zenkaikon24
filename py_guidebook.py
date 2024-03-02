@@ -1,7 +1,7 @@
 import json
 import pickle
 from datetime import datetime, timedelta
-import pprint
+import copy
 # Required for https://stackoverflow.com/questions/32245560/module-object-has-no-attribute-strptime-with-several-threads-python
 import _strptime
 import time
@@ -116,9 +116,10 @@ def update_guidebook_data(node, api_key, guide_id, now):
         write_sessions_all_day(sessions, now)
         send_update(node, "failed", 5, "Used local data")
         return
+  
+    # Make a copy so that we can later cache sessions data without the metadata
+    cache_data = copy.deepcopy(sessions)
 
-    pickle.dump(sessions, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
-    
     send_update(node, "updating", 2, "Processing new Guidebook data")
 
     add_session_metadata(sessions, now)
@@ -127,6 +128,10 @@ def update_guidebook_data(node, api_key, guide_id, now):
     write_sessions_all_day(sessions, now)
     node.send_json("/guidebook/update", {"status": "updated"})
     send_update(node, "ok", 3, "Used new Guidebook data")
+
+    # Only cache Guidebook data if *everything* is successful. If there is something
+    # in a fetch that causes exceptions, we don't want to use that data next time.
+    pickle.dump(cache_data, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
 
 
 def starts_today(now, start):
