@@ -100,61 +100,37 @@ def send_update(node, status, code, desc, exception=None):
     })
 
 
-class Timer:
-    def __init__(self, description):
-        self.description = description
-    
-    def __enter__(self):
-        self.start = datetime.now()
-    
-    def __exit__(self, *args):
-        delta = datetime.now() - self.start
-        print(self.description + ": " + str(delta))
-
-
 def update_guidebook_data(node, api_key, guide_id, now):
     # Attempt to get data from Guidebook, and fall back to saved data
     # if not successful.
     try:
         send_update(node, "updating", 1, "Fetching")
-        with Timer("Fetching guidebook and building session list"):
-            guidebook = Guidebook(api_key)       
-            sessions = build_session_list(guidebook, guide_id)
+        guidebook = Guidebook(api_key)       
+        sessions = build_session_list(guidebook, guide_id)
     except Exception as e:
         send_update(node, "failed", 4, "Guidebook fetch failed, processing local data", e)
-        with Timer("Loading pickled cache"):
-            sessions = load_sessions_pickle("SCRATCH/data_guidebook.pkl")
-        
-        with Timer("Adding metadata to cached data"):
-            add_session_metadata(sessions, now)
-
-        with Timer("Writing session jsons from cached data"):
-            write_sessions_now(sessions, now)
-            write_sessions_soon(sessions, now)
-            write_sessions_all_day(sessions, now)
+        sessions = load_sessions_pickle("SCRATCH/data_guidebook.pkl")       
+        add_session_metadata(sessions, now)
+        write_sessions_now(sessions, now)
+        write_sessions_soon(sessions, now)
+        write_sessions_all_day(sessions, now)
         send_update(node, "failed", 5, "Used local data")
         return
   
     # Make a copy so that we can later cache sessions data without the metadata
-    with Timer("Making deepcopy"):
-        cache_data = copy.deepcopy(sessions)
+    cache_data = copy.deepcopy(sessions)
 
     send_update(node, "updating", 2, "Processing new Guidebook data")
-
-    with Timer("Adding metadata to new data"):
-        add_session_metadata(sessions, now)
-
-    with Timer("Writing session jsons for new data"):
-        write_sessions_now(sessions, now)
-        write_sessions_soon(sessions, now)
-        write_sessions_all_day(sessions, now)
+    add_session_metadata(sessions, now)
+    write_sessions_now(sessions, now)
+    write_sessions_soon(sessions, now)
+    write_sessions_all_day(sessions, now)
     node.send_json("/guidebook/update", {"status": "updated"})
     send_update(node, "ok", 3, "Used new Guidebook data")
 
     # Only cache Guidebook data if *everything* is successful. If there is something
     # in a fetch that causes exceptions, we don't want to use that data next time.
-    with Timer("Saving cache data as pickle"):
-        pickle.dump(cache_data, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
+    pickle.dump(cache_data, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
 
 
 def starts_today(now, start):
