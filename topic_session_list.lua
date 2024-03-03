@@ -5,6 +5,7 @@ local json = require "json"
 local list = require "list_util"
 require "text_util"
 require "color_util"
+require "file_util"
 
 local SessionListTopic = class("SessionListTopic", Topic)
 local SessionListItem = class("SessionListItem")
@@ -23,7 +24,7 @@ function SessionListTopic:initialize(w, h, style, duration, heading, text)
     self.heading = Heading(heading, style.heading)
     
     data_filename = text:match("data:([%w_.]+)")
-    local session_data_text = resource.load_file(data_filename)
+    local session_data_text = file_load_safe(data_filename, "[]")
     self.sessions_data = json.decode(session_data_text)
 
     self.sessions_per_page = 5  -- todo This should be based on height and session size
