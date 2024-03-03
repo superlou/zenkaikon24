@@ -49,16 +49,16 @@ def update_guidebook_thread():
         time.sleep(60)
 
 
+# Kick off service threads
 threads = [
-    (update_time_thread, 1),
-    (update_guidebook_thread, 60),
+    update_time_thread,
+    update_guidebook_thread,
 ]
 
-for fn, sleep_time in threads:
+for fn in threads:
     t = Thread(target=fn)
     t.daemon = True
     t.start()
 
-
 while True:
-    pass
+    time.sleep(0.1)
