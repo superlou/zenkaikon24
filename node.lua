@@ -33,7 +33,7 @@ util.data_mapper {
     end;
     ["guidebook/update"] = function(data)
         data = json.decode(data)
-        service_indicator:update(data.status, data.code, data.desc)
+        service_indicator:update(data.updating, data.checks, data.desc)
     end;
 }
 
@@ -67,7 +67,7 @@ function node.render()
 
     clock:draw()
 
-    offset(1710, 1050, function()
+    offset(10, 978, function()
         service_indicator:draw()
     end)
 end

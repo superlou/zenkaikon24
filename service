@@ -7,6 +7,7 @@ from threading import Thread
 from py_hosted import config, node
 from py_clock import update_time, determine_now
 from py_guidebook import update_guidebook_data, send_update
+from py_guidebook import checks as guidebook_checks
 
 service_version = "0.1.0"
 
@@ -25,7 +26,7 @@ def update_time_thread():
         try:
             now = determine_now(config.debug_datetime)
             update_time(node, now)
-        except Exception as e:
+        except Exception:
             pass
 
         time.sleep(1)
@@ -42,8 +43,7 @@ def update_guidebook_thread():
                 now
             )
         except Exception as e:
-            node.send_json("/guidebook/update", {"status": "failed-unexpected"})
-            send_update(node, "failed", 99, "Unexpected failure", e)
+            send_update(node, False, guidebook_checks, "Unexpected failure", e)
             traceback.print_exc()
 
         time.sleep(60)

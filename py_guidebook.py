@@ -3,8 +3,7 @@ import pickle
 from datetime import datetime, timedelta
 import copy
 # Required for https://stackoverflow.com/questions/32245560/module-object-has-no-attribute-strptime-with-several-threads-python
-import _strptime
-from timeit import timeit
+import time
 import traceback
 import requests
 
@@ -91,46 +90,91 @@ def load_sessions_pickle(filename):
         return []
 
 
-def send_update(node, status, code, desc, exception=None):
+def send_update(node, updating, checks, desc, exception=None):
     node.send_json("/guidebook/update", {
-        "status": status,
-        "code": code,
+        "updating": updating,
+        "checks": checks,
         "desc": desc,
         "exception": str(exception),
     })
 
 
+UNKNOWN = 0
+OK = 1
+IN_PROGRESS = 2
+FAIL = 3
+
+checks = {
+    "fetch": UNKNOWN,
+    "process": UNKNOWN,
+    "write": UNKNOWN,
+    "cache": UNKNOWN,
+}
+
 def update_guidebook_data(node, api_key, guide_id, now):
+    global checks
+    checks = {
+        "fetch": UNKNOWN,
+        "process": UNKNOWN,
+        "write": UNKNOWN,
+        "cache": UNKNOWN,
+    }
+
     # Attempt to get data from Guidebook, and fall back to saved data
     # if not successful.
     try:
-        send_update(node, "updating", 1, "Fetching")
-        guidebook = Guidebook(api_key)       
+        checks["fetch"] = IN_PROGRESS
+        send_update(node, True, checks, "Fetching from Guidebook")
+        guidebook = Guidebook(api_key)
         sessions = build_session_list(guidebook, guide_id)
+        checks["fetch"] = OK
+        send_update(node, True, checks, "Fetched successfully")
     except Exception as e:
-        send_update(node, "failed", 4, "Guidebook fetch failed, processing local data", e)
-        sessions = load_sessions_pickle("SCRATCH/data_guidebook.pkl")       
+        checks["fetch"] = FAIL
+        send_update(node, True, checks, "Failed fetching from Guidebook, processing local data", e)
+        sessions = load_sessions_pickle("SCRATCH/data_guidebook.pkl")     
+
+    # Make a copy so that we can later cache Guidebook data without the metadata
+    cache_data = copy.deepcopy(sessions)
+
+    try:
+        checks["process"] = IN_PROGRESS
+        send_update(node, True, checks, "Processing Guidebook data")
         add_session_metadata(sessions, now)
+        time.sleep(0.1)
+        checks["process"] = OK
+        send_update(node, True, checks, "Done processing Guidebook data")
+    except Exception as e:
+        checks["process"] = FAIL
+        send_update(node, False, checks, "Failed processing Guidebook data", e)
+        return
+
+    try:
+        checks["write"] = IN_PROGRESS
+        send_update(node, True, checks, "Writing session info to JSON")
         write_sessions_now(sessions, now)
         write_sessions_soon(sessions, now)
         write_sessions_all_day(sessions, now)
-        send_update(node, "failed", 5, "Used local data")
+        time.sleep(0.1)
+        checks["write"] = OK
+        send_update(node, True, checks, "Done writing session info to JSON")
+    except Exception as e:
+        checks["write"] = FAIL
+        send_update(node, False, checks, "Failed writing session info to JSON", e)
         return
-  
-    # Make a copy so that we can later cache sessions data without the metadata
-    cache_data = copy.deepcopy(sessions)
-
-    send_update(node, "updating", 2, "Processing new Guidebook data")
-    add_session_metadata(sessions, now)
-    write_sessions_now(sessions, now)
-    write_sessions_soon(sessions, now)
-    write_sessions_all_day(sessions, now)
-    node.send_json("/guidebook/update", {"status": "updated"})
-    send_update(node, "ok", 3, "Used new Guidebook data")
 
     # Only cache Guidebook data if *everything* is successful. If there is something
     # in a fetch that causes exceptions, we don't want to use that data next time.
-    pickle.dump(cache_data, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
+    try:
+        checks["cache"] = IN_PROGRESS
+        send_update(node, True, checks, "Caching Guidebook data")
+        pickle.dump(cache_data, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
+        time.sleep(0.1)
+        checks["cache"] = OK
+        send_update(node, False, checks, "Done caching Guidebook data")
+    except Exception as e:
+        checks["cache"] = FAIL
+        send_update(node, False, checks, "Failed caching Guidebook data", e)
 
 
 def starts_today(now, start):
