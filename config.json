@@ -18,7 +18,7 @@
         },
         "setup_id":245722,
         "sync_ts":1702845900,
-        "timezone":"UTC"
+        "timezone":"America/New_York"
     },
     "ticker_msgs":[
         {"ticker_text_msg":"First ticker message"},

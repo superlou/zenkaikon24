@@ -24,7 +24,7 @@ else:
 def update_time_thread():
     while True:
         try:
-            now = determine_now(config.debug_datetime)
+            now = determine_now(config.debug_datetime, config.metadata_timezone)
             update_time(node, now)
         except Exception:
             pass
@@ -35,7 +35,7 @@ def update_time_thread():
 def update_guidebook_thread():
     while True:
         try:
-            now = determine_now(config.debug_datetime)
+            now = determine_now(config.debug_datetime, config.metadata_timezone)
             update_guidebook_data(
                 node,
                 guidebook_api_key,
