@@ -5,7 +5,7 @@ import socket
 import traceback
 from threading import Thread
 from py_hosted import config, node
-from py_clock import update_time, determine_now
+from py_clock import update_time, determine_now_local
 from py_guidebook import update_guidebook_data, send_update
 from py_guidebook import checks as guidebook_checks
 
@@ -24,7 +24,7 @@ else:
 def update_time_thread():
     while True:
         try:
-            now = determine_now(config.debug_datetime, config.metadata_timezone)
+            now = determine_now_local(config.debug_datetime, config.metadata_timezone)
             update_time(node, now)
         except Exception:
             pass
@@ -35,12 +35,13 @@ def update_time_thread():
 def update_guidebook_thread():
     while True:
         try:
-            now = determine_now(config.debug_datetime, config.metadata_timezone)
+            now = determine_now_local(config.debug_datetime, config.metadata_timezone)
             update_guidebook_data(
                 node,
                 guidebook_api_key,
                 config.guidebook_guide_id,
-                now
+                now,
+                config.metadata_timezone
             )
         except Exception as e:
             send_update(node, False, guidebook_checks, "Unexpected failure", e)

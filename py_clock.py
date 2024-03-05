@@ -1,25 +1,30 @@
 from datetime import datetime
 import time
-import pytz
+from pytz import utc, timezone
 
 
-def determine_now(debug_datetime_text, timezone):
+def system_timezone():
+    is_dst = time.localtime().tm_isdst
+    tzname = time.tzname[is_dst]
+    return timezone(tzname)
+
+
+def determine_now_local(debug_datetime_text, local_tz):
     try:
         # If we can parse the debug datetime, use that as local time.
         fmt = '%Y-%m-%dT%H:%M:%S'
         now = datetime.strptime(debug_datetime_text, fmt)
-        return now
+        return local_tz.localize(now)
     except Exception:
         pass
     
-    is_dst = time.localtime().tm_isdst
-    tzname = time.tzname[is_dst]
-
     now = datetime.now()
 
-    if tzname == "UTC":
-        # We are probably on a Raspberry Pi and need to convert to local time.
-        now = pytz.utc.localize(now).astimezone(timezone)
+    if system_timezone() == utc:
+        # We are probably on a Raspberry Pi and need to get to local time
+        now = utc.localize(now).astimezone(system_timezone())
+    else:
+        now = system_timezone().localize(now)
 
     return now
 

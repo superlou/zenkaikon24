@@ -6,6 +6,7 @@ import copy
 import time
 import traceback
 import requests
+from pytz import utc
 
 class Guidebook:
     def __init__(self, api_key):
@@ -64,15 +65,20 @@ class Guidebook:
         return locations
 
 
-def build_session_list(guidebook, guide_id):
+def build_session_list(guidebook, guide_id, local_tz):
     locations = guidebook.get_locations(guide_id)
     location_map = {location["id"]: location["name"] for location in locations}
     sessions = guidebook.get_sessions(guide_id)
     
+    # All times from Guidebook are in UTC and get converted to local time
+    def prepare_timestamp(text):
+        timestamp = datetime.strptime(text, GUIDEBOOK_TIMESTAMP_FMT)
+        return utc.localize(timestamp).astimezone(local_tz)
+
     sessions = [{
         "name": session["name"],
-        "start": datetime.strptime(session["start_time"], GUIDEBOOK_TIMESTAMP_FMT),
-        "finish": datetime.strptime(session["end_time"], GUIDEBOOK_TIMESTAMP_FMT),
+        "start": prepare_timestamp(session["start_time"]),
+        "finish": prepare_timestamp(session["end_time"]),
         "locations": [location_map[loc_id] for loc_id in session["locations"]],
     } for session in sessions]
 
@@ -111,7 +117,7 @@ checks = {
     "cache": UNKNOWN,
 }
 
-def update_guidebook_data(node, api_key, guide_id, now):
+def update_guidebook_data(node, api_key, guide_id, now, local_tz):
     global checks
     checks = {
         "fetch": UNKNOWN,
@@ -126,7 +132,7 @@ def update_guidebook_data(node, api_key, guide_id, now):
         checks["fetch"] = IN_PROGRESS
         send_update(node, True, checks, "Fetching from Guidebook")
         guidebook = Guidebook(api_key)
-        sessions = build_session_list(guidebook, guide_id)
+        sessions = build_session_list(guidebook, guide_id, local_tz)
         checks["fetch"] = OK
         send_update(node, True, checks, "Fetched successfully")
     except Exception as e:
