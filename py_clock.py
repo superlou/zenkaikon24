@@ -22,7 +22,7 @@ def determine_now_local(debug_datetime_text, local_tz):
 
     if system_timezone() == utc:
         # We are probably on a Raspberry Pi and need to get to local time
-        now = utc.localize(now).astimezone(system_timezone())
+        now = utc.localize(now).astimezone(local_tz)
     else:
         now = system_timezone().localize(now)
 
