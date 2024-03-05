@@ -25,9 +25,9 @@
         {"ticker_text_msg":"Second ticker message"},
         {"ticker_text_msg":"Last ticker message"}
     ],
-    "debug_datetime": "2023-03-25T18:00:00",
+    "debug_datetime": "2024-03-22T10:00:00",
     "guidebook_api_key": "",
-    "guidebook_guide_id": "195964",
+    "guidebook_guide_id": "195965",
     "ticker_speed": 2.0,
     "left_topic_player":[{
         "device":"",
