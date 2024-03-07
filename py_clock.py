@@ -43,7 +43,7 @@ class Clockwork:
 
     def now_local(self):
         if self.debug_datetime is None:
-            return self.startup_time if self.debug_accel == 0.0 else self._local_time()
+            return self._local_time()
         else:
             return self._debug_time()
 
