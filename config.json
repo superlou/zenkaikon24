@@ -26,6 +26,7 @@
         {"ticker_text_msg":"Last ticker message"}
     ],
     "debug_datetime": "2024-03-22T10:00:00",
+    "debug_time_accel": 1.0,
     "guidebook_api_key": "",
     "guidebook_guide_id": "195965",
     "ticker_speed": 2.0,

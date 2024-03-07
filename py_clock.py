@@ -1,32 +1,51 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 import time
 from pytz import utc, timezone
 
 
-def system_timezone():
-    is_dst = time.localtime().tm_isdst
-    tzname = time.tzname[is_dst]
-    return timezone(tzname)
+class Clockwork:
+    def __init__(self, local_tz, debug_datetime_text, debug_accel):
+        self.local_tz = local_tz
+        self.system_tz = self.find_system_tz()
+        self.debug_accel = debug_accel
+        self.startup_time = self._local_time()
+        self.debug_datetime = None
 
+        try:
+            fmt = '%Y-%m-%dT%H:%M:%S'
+            now = datetime.strptime(debug_datetime_text, fmt)
+            self.debug_datetime = self.local_tz.localize(now)
+        except Exception:
+            pass
 
-def determine_now_local(debug_datetime_text, local_tz):
-    try:
-        # If we can parse the debug datetime, use that as local time.
-        fmt = '%Y-%m-%dT%H:%M:%S'
-        now = datetime.strptime(debug_datetime_text, fmt)
-        return local_tz.localize(now)
-    except Exception:
-        pass
-    
-    now = datetime.now()
+    def find_system_tz(self):
+        is_dst = time.localtime().tm_isdst
+        tzname = time.tzname[is_dst]
+        return timezone(tzname)
 
-    if system_timezone() == utc:
-        # We are probably on a Raspberry Pi and need to get to local time
-        now = utc.localize(now).astimezone(local_tz)
-    else:
-        now = system_timezone().localize(now)
+    def _local_time(self):
+        now = datetime.now()
 
-    return now
+        if self.system_tz == utc:
+            # We are probably on a Raspberry Pi and need to get to local time
+            now = utc.localize(now).astimezone(self.local_tz)
+        else:
+            now = self.system_tz.localize(now)
+        
+        return now
+
+    def _debug_time(self):
+        now = self.debug_datetime      
+        offset = self._local_time() - self.startup_time
+        accel_offset = timedelta(seconds=offset.total_seconds() * self.debug_accel)
+        now += accel_offset
+        return now
+
+    def now_local(self):
+        if self.debug_datetime is None:
+            return self.startup_time if self.debug_accel == 0.0 else self._local_time()
+        else:
+            return self._debug_time()
 
 
 def update_time(node, now):

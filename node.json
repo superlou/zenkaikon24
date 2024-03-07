@@ -113,6 +113,13 @@
             "name": "debug_datetime",
             "type": "string",
             "hint": "Force the date and time in the form YYYY-MM-DD%HH:MM:SS. Leave blank to use the current date and time."
+        },
+        {
+            "title": "Accelerate debug time",
+            "name": "debug_time_accel",
+            "type": "float",
+            "default": 1.0,
+            "hint": "Accelerate time if using a Debug Datetime. With real time, setting to 0.0 will freeze time. Note that scheduling data is still only updated once per minute."
         }
     ]
 }

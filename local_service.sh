@@ -4,4 +4,5 @@
 # export GUIDEBOOK_API_KEY="..."
 source .env
 
-NODE=zenkaikon24 ./service
+# Force TZ, since info-beamer nodes always use UTC time.
+TZ=UTC NODE=zenkaikon24 ./service
