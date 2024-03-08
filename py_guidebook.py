@@ -184,9 +184,14 @@ def update_guidebook_data(node, api_key, guide_id, now, local_tz):
 
 
 def starts_today(now, start):
-    today_midnight = now.replace(hour=0, minute=0, second=0, microsecond=0)
-    today_start = today_midnight + timedelta(hours=5)
+    # A "day" starts at 4 am
+    today_start = now.replace(hour=4, minute=0, second=0, microsecond=0)
+    if now.hour < 4:
+        # Before 4 am, treat the previous day as the start
+        today_start -= timedelta(hours=24)
+
     today_finish = today_start + timedelta(hours=24)
+
     return today_start <= start < today_finish
 
 
