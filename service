@@ -1,5 +1,6 @@
 #!/usr/bin/python2.7
 import os
+import datetime
 import time
 import socket
 import traceback
@@ -47,7 +48,8 @@ def update_guidebook_thread():
                 guidebook_api_key,
                 config.guidebook_guide_id,
                 now,
-                config.metadata_timezone
+                config.metadata_timezone,
+                datetime.timedelta(hours=3.5)
             )
         except Exception as e:
             send_update(node, False, guidebook_checks, "Unexpected failure", e)

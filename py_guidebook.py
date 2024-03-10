@@ -117,7 +117,7 @@ checks = {
     "cache": UNKNOWN,
 }
 
-def update_guidebook_data(node, api_key, guide_id, now, local_tz):
+def update_guidebook_data(node, api_key, guide_id, now, local_tz, all_day_threshold):
     global checks
     checks = {
         "fetch": UNKNOWN,
@@ -158,9 +158,9 @@ def update_guidebook_data(node, api_key, guide_id, now, local_tz):
     try:
         checks["write"] = IN_PROGRESS
         send_update(node, True, checks, "Writing session info to JSON")
-        write_sessions_now(sessions, now)
-        write_sessions_soon(sessions, now)
-        write_sessions_all_day(sessions, now)
+        write_sessions_now(sessions, now, all_day_threshold)
+        write_sessions_soon(sessions, now, all_day_threshold)
+        write_sessions_all_day(sessions, now, all_day_threshold)
         time.sleep(0.1)
         checks["write"] = OK
         send_update(node, True, checks, "Done writing session info to JSON")
@@ -237,7 +237,7 @@ def save_sessions_for_topic_list(sessions, filename):
         json.dump(session_data, f)
 
 
-def write_sessions_now(sessions, now, max_duration=timedelta(hours=4.5)):
+def write_sessions_now(sessions, now, max_duration):
     sessions_now = [
         s for s in sessions
         if s["is_open"] and s["duration"] <= max_duration
@@ -246,7 +246,7 @@ def write_sessions_now(sessions, now, max_duration=timedelta(hours=4.5)):
     save_sessions_for_topic_list(sessions_now, "data_sessions_now.json")
 
 
-def write_sessions_soon(sessions, now, max_duration=timedelta(hours=4.5)):
+def write_sessions_soon(sessions, now, max_duration):
     sessions_soon = [
         s for s in sessions
         if s["is_soon"] and s["duration"] <= max_duration
@@ -255,7 +255,7 @@ def write_sessions_soon(sessions, now, max_duration=timedelta(hours=4.5)):
     save_sessions_for_topic_list(sessions_soon, "data_sessions_soon.json")
 
 
-def write_sessions_all_day(sessions, now, min_duration=timedelta(hours=4.5)):
+def write_sessions_all_day(sessions, now, min_duration):
     sessions_all_day = [
         s for s in sessions
         if s["starts_today"] and s["duration"] > min_duration
