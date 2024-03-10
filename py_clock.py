@@ -51,6 +51,11 @@ class Clockwork:
 def update_time(node, now):
     time_hhmm = now.strftime("%I:%M")
     time_am_pm = now.strftime("%p")
+    month = now.strftime("%b")
+    
+    date = now.strftime("%d")
+    if date[0] == "0":
+        date = date[1]
 
     # Used for compatiblity since "%-I" doesn't work on all systems
     if time_hhmm[0] == "0":
@@ -59,4 +64,6 @@ def update_time(node, now):
     node.send_json("/clock/update", {
         "hh_mm": time_hhmm,
         "am_pm": time_am_pm,
+        "month": month,
+        "date": date
     })

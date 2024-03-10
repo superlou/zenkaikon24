@@ -16,7 +16,7 @@ local ticker_left_crop = resource.load_image "img_ticker_left_crop.png"
 local ticker_right_crop = resource.load_image "img_ticker_right_crop.png"
 
 local ticker = Ticker:new(0, HEIGHT - 116, WIDTH, 116)
-local clock = Clock:new(1710, 972, 200, 96)
+local clock = Clock:new(200, 96)
 local service_indicator = ServiceIndicator()
 
 local style = require "style"
@@ -29,7 +29,7 @@ local topic_right = TopicPlayer(1150, 970, right_style)
 util.data_mapper {
     ["clock/update"] = function(data)
         data = json.decode(data)
-        clock:update(data.hh_mm, data.am_pm)
+        clock:update(data.hh_mm, data.am_pm, data.month, data.date)
     end;
     ["guidebook/update"] = function(data)
         data = json.decode(data)
@@ -63,9 +63,11 @@ function node.render()
     ticker:draw()
 
     ticker_left_crop:draw(0, 964, 47, 964 + 116)
-    ticker_right_crop:draw(1692, 964, 1692 + 228, 964 + 116)
+    ticker_right_crop:draw(1692, 964, 1692 + 229, 964 + 117)
 
-    clock:draw()
+    offset(1710, 972, function()
+        clock:draw()
+    end)
 
     offset(10, 978, function()
         service_indicator:draw()
