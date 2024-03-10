@@ -8,12 +8,15 @@ local BaseHeading = class("BaseHeading")
 
 function BaseHeading:initialize(text, heading_style)
     self.text = text
+    self.is_blank = (text == "")
     self.font = heading_style.font
     self.font_size = heading_style.font_size or 50
     self.text_color = {hex2rgb(heading_style.text_color or "000000")}
 end
 
 function BaseHeading:draw()
+    if self.is_blank then return end
+
     local text_r, text_g, text_b = unpack(self.text_color)
     write_centered(
         self.font, 0, 0, self.text, self.font_size,
@@ -43,6 +46,8 @@ function BoxHeading:initialize(text, heading_style)
 end
 
 function BoxHeading:draw()
+    if self.is_blank then return end
+    
     local text_r, text_g, text_b = unpack(self.text_color)
     local font_w = self.font:width(self.text, self.font_size)
 
@@ -84,6 +89,7 @@ function UnderlineHeading:initialize(text, heading_style)
 end
 
 function UnderlineHeading:draw()
+    if self.is_blank then return end    
     local text_r, text_g, text_b = unpack(self.text_color)
     local font_w = self.font:width(self.text, self.font_size)
 

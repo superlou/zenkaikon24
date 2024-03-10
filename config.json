@@ -33,13 +33,13 @@
     "left_topic_player":[{
         "device":"",
         "duration": 5,
-        "heading":"Today",
+        "heading":"",
         "media":{"asset_id":"img_no_media.png","asset_name":"img_no_media.png","filename":"img_no_media.png","metadata":{},"tags":[],"type":"image"},
         "message":"!session-brief\ndata:data_sessions_all_day.json"
     }, {
         "device":"",
         "duration":5,
-        "heading":"AUTOGRAPHS",
+        "heading":"",
         "media": {
             "asset_id":1576303,
             "asset_name":"test-asset-e34322bab2ee7b7196d23529692d86ec-example_autograph.png",
@@ -50,7 +50,7 @@
     }, {
         "device":"",
         "duration":5,
-        "heading":"AUTOGRAPHS",
+        "heading":"",
         "media": {
             "asset_id":1576303,
             "asset_name":"test-asset-12345678b2ee1b7a96d23529692d86ec-example_autograph2.png",
@@ -62,13 +62,13 @@
     "right_topic_player": [{
         "device": "",
         "duration": 5,
-        "heading": "Happening Now",
+        "heading": "",
         "media": {},
         "message": "!session-list\ndata:data_sessions_now.json"
     }, {
         "device": "",
         "duration": 5,
-        "heading": "Starting Soon",
+        "heading": "",
         "media": {},
         "message": "!session-list\ndata:data_sessions_soon.json"
     }]
