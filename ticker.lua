@@ -5,7 +5,7 @@ local Ticker = class("Ticker")
 local TickerMsg = class("TickerMsg")
 
 local font = resource.load_font "font_Lato-Regular.ttf"
-local separator = resource.load_image("img_separator.png")
+local separator = resource.load_image("img_separator2.png")
 local msg_y_offset = 28
 
 function Ticker:initialize()
@@ -92,7 +92,7 @@ end
 
 function TickerMsg:draw()
     local text_width = self.font:write(self.x, self.y, self.text, self.size, 1, 1, 1, 1)
-    local width, height = 20, 20
+    local width, height = 24, 17.5
     local x_offset = 20
     local y_offset = 18
     separator:draw(
