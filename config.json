@@ -71,5 +71,22 @@
         "heading": "Starting Soon",
         "media": {},
         "message": "!session-list\ndata:data_sessions_soon.json"
+    }, {
+        "device":"",
+        "duration": 5,
+        "heading":"Full Screen Event Image",
+        "media": {
+            "asset_id":1576303,
+            "asset_name":"test-asset-123-809a38402d9813593eca9-example_event.png",
+            "filename":"example_event.png",
+            "metadata":{"format":"png", "height":964, "width":1332}
+        },
+        "message":""
+    }, {
+        "device":"",
+        "duration": 5,
+        "heading":"Simple Text Info",
+        "media": {"filename":"img_no_media.png"},
+        "message": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
     }]
 }

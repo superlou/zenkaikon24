@@ -15,7 +15,7 @@ local left_style = {
         font_bold = font_bold,
         color = "333195",
     },
-    margin = 70,
+    margin = {70, 70, 70, 70},
     heading_y = 100,
     message_y = 180,
 }
@@ -35,7 +35,8 @@ local right_style = {
         font_bold = font_bold,
         color = "ffffff",
     },
-    margin = 80,
+    player_bg_mask = "img_right_mask.png",
+    margin = {80, 50, 80, 120},
     heading_y = 100,
     message_y = 180,
 }

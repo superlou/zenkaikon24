@@ -84,7 +84,7 @@ function SessionListTopic:draw()
     end)
 
     for i, session_item in ipairs(self.session_items) do
-        offset(20, self.style.message_y + (i - 1) * 140 + 60, function()
+        offset(0, self.style.message_y + (i - 1) * 140 + 60, function()
             session_item:draw()
         end)
     end
@@ -101,6 +101,7 @@ function SessionListItem:initialize(name, locations, start_hhmm, start_ampm,
     self.w, self.h = w, h
     self.duration = duration
     self.style = style
+    self.margin = self.style.margin
 
     for i, location in ipairs(self.locations) do
         self.locations[i] = string.upper(location)
@@ -112,9 +113,10 @@ function SessionListItem:initialize(name, locations, start_hhmm, start_ampm,
     self.font_bold = self.style.text.font_bold
 
     -- Calculations to right align time text
-    self.date_w = 120
-    self.start_hhmm_x = self.date_w - self.font:width(self.start_hhmm, self.font_size)
-    self.start_ampm_x = self.date_w - self.font:width(self.start_ampm, self.font_size * 0.8)
+    self.date_w = 130
+    self.start_hhmm_x = self.margin[4] + self.date_w - self.font:width(self.start_hhmm, self.font_size)
+    self.start_ampm_x = self.margin[4] + self.date_w - self.font:width(self.start_ampm, self.font_size * 0.8)
+    print(self.font:width(self.start_hhmm, self.font_size))
 
     self.alpha = 0
 
@@ -129,16 +131,19 @@ function SessionListItem:draw()
 
     self:draw_time()
 
+    local name_x = self.margin[4] + self.date_w + 28
+    local name_w = self.w - name_x - self.margin[2]
+
     draw_text_in_window(
         self.name,
-        self.date_w + 30, 0, self.w - 120,
+        name_x, 0, name_w,
         self.font_size, self.font_size, self.font,
         r, g, b, self.alpha, 0
     )
 
     if #self.locations > 0 then
         self.font_bold:write(
-            self.date_w + 31, 61, self.locations[1], self.font_size * 0.55,
+            self.margin[4] + self.date_w + 31, 61, self.locations[1], self.font_size * 0.55,
             r, g, b, self.alpha
         )
     end
@@ -166,8 +171,8 @@ function SessionListItem:draw_time()
         fill_img = red_img
     end
 
-    white_img:draw(0, bar_y, bar_w, bar_y + bar_h, self.alpha)
-    fill_img:draw(0, bar_y, bar_w * self.completed_fraction, bar_y + bar_h, self.alpha)
+    white_img:draw(self.margin[4], bar_y, self.margin[4] + bar_w, bar_y + bar_h, self.alpha)
+    fill_img:draw(self.margin[4], bar_y, self.margin[4] + bar_w * self.completed_fraction, bar_y + bar_h, self.alpha)
 end
 
 return SessionListTopic

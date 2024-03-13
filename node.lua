@@ -24,7 +24,7 @@ local left_style = style["left_style"]
 local right_style = style["right_style"]
 
 local topic_left = TopicPlayer(694, 964, left_style)
-local topic_right = TopicPlayer(1150, 970, right_style)
+local topic_right = TopicPlayer(1332, 964, right_style)
 
 util.data_mapper {
     ["clock/update"] = function(data)
@@ -56,7 +56,7 @@ function node.render()
     right_bg:draw(575, 0, 575 + 1345, 1080)
     draw_glass()
 
-    offset(680, 0, function()
+    offset(588, 0, function()
         topic_right:draw()
     end)
 
