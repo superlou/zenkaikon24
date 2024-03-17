@@ -3,6 +3,7 @@
     "permissions": {
         "network": "Needs to access Guidebook API"
     },
+    "scratch_mount": "SCRATCH",
     "options": [
         {
             "title": "Ticker",
