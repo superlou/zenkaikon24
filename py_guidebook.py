@@ -117,7 +117,8 @@ checks = {
     "cache": UNKNOWN,
 }
 
-def update_guidebook_data(node, api_key, guide_id, now, local_tz, all_day_threshold):
+def update_guidebook_data(node, api_key, guide_id, now, local_tz, all_day_threshold,
+                          scratch_dir):
     global checks
     checks = {
         "fetch": UNKNOWN,
@@ -138,7 +139,7 @@ def update_guidebook_data(node, api_key, guide_id, now, local_tz, all_day_thresh
     except Exception as e:
         checks["fetch"] = FAIL
         send_update(node, True, checks, "Failed fetching from Guidebook, processing local data", e)
-        sessions = load_sessions_pickle("SCRATCH/data_guidebook.pkl")     
+        sessions = load_sessions_pickle(scratch_dir + "/data_guidebook.pkl")
 
     # Make a copy so that we can later cache Guidebook data without the metadata
     cache_data = copy.deepcopy(sessions)
@@ -174,7 +175,7 @@ def update_guidebook_data(node, api_key, guide_id, now, local_tz, all_day_thresh
     try:
         checks["cache"] = IN_PROGRESS
         send_update(node, True, checks, "Caching Guidebook data")
-        pickle.dump(cache_data, open("SCRATCH/data_guidebook.pkl", "wb"), 2)
+        pickle.dump(cache_data, open(scratch_dir + "/data_guidebook.pkl", "wb"), 2)
         time.sleep(0.1)
         checks["cache"] = OK
         send_update(node, False, checks, "Done caching Guidebook data")
