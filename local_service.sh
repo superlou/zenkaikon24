@@ -5,4 +5,4 @@
 source .env
 
 # Force TZ, since info-beamer nodes always use UTC time.
-TZ=UTC NODE=zenkaikon24 ./service
+INFOBEAMER_ENV_SERIAL=12345 TZ=UTC NODE=zenkaikon24 ./service

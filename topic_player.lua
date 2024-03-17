@@ -1,3 +1,4 @@
+require "table_util"
 local class = require "middleclass"
 
 local TopicPlayer = class("TopicPlayer")
@@ -16,6 +17,12 @@ function TopicPlayer:initialize(w, h, style, bg)
 end
 
 function TopicPlayer:set_topics_from_config(config)
+    local serial_num = sys.get_env("SERIAL")
+
+    filter_inplace(config, function(topic)
+        return topic.device == "" or topic.device == serial_num
+    end)
+
     self.topic_configs = config
 end
 
