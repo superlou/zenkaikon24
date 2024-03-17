@@ -116,7 +116,6 @@ function SessionListItem:initialize(name, locations, start_hhmm, start_ampm,
     self.date_w = 130
     self.start_hhmm_x = self.margin[4] + self.date_w - self.font:width(self.start_hhmm, self.font_size)
     self.start_ampm_x = self.margin[4] + self.date_w - self.font:width(self.start_ampm, self.font_size * 0.8)
-    print(self.font:width(self.start_hhmm, self.font_size))
 
     self.alpha = 0
 
